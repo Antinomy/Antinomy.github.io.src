@@ -1,7 +1,12 @@
 # Header
 menu:
   Home: /
-  Archives: /archives
+#  Archives: /archives
+  Art: /categories/Art/
+  Tech: /categories/Tech/
+  Tao: /categories/Tao/
+  Other: /categories/Other/
+  Me: /about
 rss: /atom.xml
 
 # Content
