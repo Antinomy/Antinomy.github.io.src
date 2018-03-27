@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>Anti</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Anti">
+<meta property="og:url" content="http://yoursite.com/index.html">
+<meta property="og:site_name" content="Anti">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Anti">
+  
+    <link rel="alternate" href="/atom.xml" title="Anti" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Anti</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Suche"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main">
+  
+    <article id="mobile-Tech-2014-2014-09-02-BenefitOfExtractMethod" class="article article-type-mobile" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/03/27/Tech-2014-2014-09-02-BenefitOfExtractMethod/" class="article-date">
+  <time datetime="2018-03-27T09:45:12.000Z" itemprop="datePublished">2018-03-27</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Tech/">Tech</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/03/27/Tech-2014-2014-09-02-BenefitOfExtractMethod/">Benefit of Extract Method</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="提炼方法的好处？"><a href="#提炼方法的好处？" class="headerlink" title="提炼方法的好处？"></a>提炼方法的好处？</h1><p>  在最近的一次Code Review里，我和同事在一个基本的问题上产生了分歧。三言两语很难说的清楚，我决定尝试把它写清楚。</p>
+<p>  分歧的起因在于我把以下的这段代码：</p>
+<hr>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// some method</span></span><br><span class="line"><span class="built_in">memset</span>( pData-&gt;field1 , <span class="string">' '</span> ,<span class="keyword">sizeof</span>(pData-&gt;field1));</span><br><span class="line"><span class="built_in">memset</span>( pData-&gt;field2 , <span class="string">' '</span> ,<span class="keyword">sizeof</span>(pData-&gt;field2));</span><br><span class="line"><span class="built_in">memset</span>( pData-&gt;field3 , <span class="string">' '</span> ,<span class="keyword">sizeof</span>(pData-&gt;field3));</span><br><span class="line"><span class="built_in">memset</span>( pData-&gt;field4 , <span class="string">' '</span> ,<span class="keyword">sizeof</span>(pData-&gt;field4));</span><br><span class="line"><span class="built_in">memset</span>( pData-&gt;field5 , <span class="string">' '</span> ,<span class="keyword">sizeof</span>(pData-&gt;field5));</span><br><span class="line"><span class="built_in">memset</span>( pData-&gt;field6 , <span class="string">' '</span> ,<span class="keyword">sizeof</span>(pData-&gt;field6));</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>  写成:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Init_String</span><span class="params">(CHAR *str)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="built_in">memset</span>(str ,<span class="string">' '</span>,<span class="keyword">sizeof</span>(str))</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// some method</span></span><br><span class="line">Init_String(pData-&gt;field1);</span><br><span class="line">Init_String(pData-&gt;field2);</span><br><span class="line">Init_String(pData-&gt;field3);</span><br><span class="line">Init_String(pData-&gt;field4);</span><br><span class="line">Init_String(pData-&gt;field5);</span><br><span class="line">Init_String(pData-&gt;field6);</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="同事对此有以下几点疑问"><a href="#同事对此有以下几点疑问" class="headerlink" title="同事对此有以下几点疑问:"></a>同事对此有以下几点疑问:</h2><pre><code>1. 有什么好处?
+2. 多了个方法，性能会变低。
+3. 与过去的风格不同，增加学习曲线。
+</code></pre><hr>
+<h2 id="动机"><a href="#动机" class="headerlink" title="动机"></a>动机</h2><p>在回答所有的问题之前,我先说下我的动机,在原先的方法里</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">memset</span>( pData-&gt;field1 , <span class="string">' '</span> ,<span class="keyword">sizeof</span>(pData-&gt;field1));</span><br></pre></td></tr></table></figure>
+<p>看来好简单的一句程序里，出现了2次”pData-&gt;field1”。<br>这里已经出现了重复的臭味道，随着这样的写法数量增多，这段代码就越来越臭了。</p>
+<p>有代码洁癖的我是觉得难以忍受的。</p>
+<p>根据DRY原则（Dont Repeat Yourself）,我把代码里不变的部分用Extract Method的手法重构到一个方法里。</p>
+<p>方法名叫Init_String（），我简单的把一个内存的操作的工作封装到‘初始化字符串’的方法里。</p>
+<p>下次我再看到这里我就只需要知道它能帮我初始化‘字符串’就行，而不需要分神去理会它是如何的实现。</p>
+<p>然后，我再来一一解答所有问题：</p>
+<hr>
+<h2 id="有什么好处"><a href="#有什么好处" class="headerlink" title="有什么好处?"></a>有什么好处?</h2><pre><code>1. 符合DRY原则 (一次且仅一次)
+   去除重复的代码,消除坏味道.
+2. 符合OCP原则 (开闭原则）
+   拆分不变与变化的代码，对于扩展是开放的，但是对于修改是封闭的.
+3. 更整洁的代码 (Clean Code)
+</code></pre><hr>
+<h2 id="多了个方法，性能会变低"><a href="#多了个方法，性能会变低" class="headerlink" title="多了个方法，性能会变低?"></a>多了个方法，性能会变低?</h2><p>多了一个新方法,每次memset时就call 多次 Init_String（）.<br>看上去是会多耗点性能,但是新的method跟原来的代码是在同一个文件里的.<br>从内存的角度,其内存地址也应该相近,在数量有限的call里,我认为性能是人感受不出来的.<br>当然要更深入讨论,可以去了解C函数的调用机制.</p>
+<hr>
+<h2 id="与过去的风格不同，增加学习曲线。"><a href="#与过去的风格不同，增加学习曲线。" class="headerlink" title="与过去的风格不同，增加学习曲线。"></a>与过去的风格不同，增加学习曲线。</h2><p>的确,这里是个问题。<br>例如100个文件里就1个文件是这种写法，风格不统一会对新人造成一点点阅读困难。</p>
+<p>我们当然做不到一夜之间就改变所有文件，也没有这个必要。<br>这不应该成为阻止我们改进的绊脚石。<br>我一直认为改进应该是增量的，每一次随着需求变化可以适当在满足需求的同时，改善现有的代码。</p>
+<p>重构是有成本的，但也是有回报的。我觉得值得投资。</p>
+<hr>
+<h2 id="Extract-Method"><a href="#Extract-Method" class="headerlink" title="Extract Method"></a>Extract Method</h2><p>最后再啰嗦下什么是Extract Method （提炼函数）.</p>
+<p>Extract Method （提炼函数）是最常用的重构手法之一。当看见一个过长的函数或者一段需要注释才能让人理解用途的代码，就应该将这段代码放进一个独立函数中。</p>
+<p>简短而命名良好的函数的好处：首先，如果每个函数的粒度都很小，那么函数被复用的机会就更大；其次，这会使高层函数读起来就想一系列注释；再次，如果函数都是细粒度，那么函数的覆写也会更容易些。</p>
+<p><a href="http://msdn.microsoft.com/en-us/library/0s21cwxk.aspx" target="_blank" rel="noopener">Further Read</a></p>
+<hr>
+<h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><p><a href="http://www.cplusplus.com/reference/cstring/memset/" target="_blank" rel="noopener">memset</a></p>
+<p><a href="http://zh.wikipedia.org/wiki/%E4%B8%80%E6%AC%A1%E4%B8%94%E4%BB%85%E4%B8%80%E6%AC%A1" target="_blank" rel="noopener">一次且仅一次</a></p>
+<p><a href="http://zh.wikipedia.org/wiki/%E5%BC%80%E9%97%AD%E5%8E%9F%E5%88%99" target="_blank" rel="noopener">开闭原则</a></p>
+<p><a href="http://zh.wikipedia.org/wiki/%E4%BB%A3%E7%A0%81%E9%87%8D%E6%9E%84" target="_blank" rel="noopener">代码重构</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2018/03/27/Tech-2014-2014-09-02-BenefitOfExtractMethod/" data-id="cjf9h6oje000001zn0fo3n0ng" class="article-share-link">Teilen</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="mobile-Tech-2018-2018-02-27-One-Issue-Cause-By-Id" class="article article-type-mobile" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/02/28/Tech-2018-2018-02-27-One-Issue-Cause-By-Id/" class="article-date">
+  <time datetime="2018-02-28T00:57:54.000Z" itemprop="datePublished">2018-02-28</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Tech/">Tech</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/02/28/Tech-2018-2018-02-27-One-Issue-Cause-By-Id/">One Issue Cause By Id</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="一个ID引起的血案"><a href="#一个ID引起的血案" class="headerlink" title="一个ID引起的血案"></a>一个ID引起的血案</h1><h2 id="一个少见的丢单问题"><a href="#一个少见的丢单问题" class="headerlink" title="一个少见的丢单问题"></a>一个少见的丢单问题</h2><p>最近遇到一个少见的丢单问题:</p>
+<pre><code>2个订单在同一秒下单,产生的订单ID居然是一样的!
+</code></pre><p> 经过一番查找,问题的原因在生产ID的工具类实现算法有漏洞,关键方法源码如下:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LongId</span> </span>&#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">private</span> Set&lt;Long&gt; recentRandoms = <span class="keyword">new</span> HashSet&lt;Long&gt;(<span class="number">5000</span>);</span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Generates a Twitter Snowflake compatible id utilizing randomness for the right most 22 bits and</span></span><br><span class="line"><span class="comment">     * the Twitter standard EPOCH</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> long</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">synchronized</span> <span class="keyword">public</span> <span class="keyword">long</span> <span class="title">generate</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">long</span> currentTimestamp = System.currentTimeMillis();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (lastTimestamp &gt; currentTimestamp) &#123;</span><br><span class="line">            <span class="comment">// Clock is running backwards so wait until it isn't</span></span><br><span class="line">            currentTimestamp = System.currentTimeMillis();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (currentTimestamp &lt; EPOCH || currentTimestamp &gt; MAX_SIGNED_LONG) &#123;</span><br><span class="line">            <span class="comment">// The current time cannot be less than the EPOCH</span></span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">"Invalid System Clock was "</span> + <span class="keyword">new</span> Date(currentTimestamp));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">long</span> customTimestamp = currentTimestamp - EPOCH;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">long</span> shiftedTimestamp = customTimestamp &lt;&lt; TIME_SHIFT;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">long</span> random = nextRandomPart();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (lastTimestamp != currentTimestamp) &#123;</span><br><span class="line">            <span class="comment">// timestamp has advanced so reset it and clear the previous cache</span></span><br><span class="line">            lastTimestamp = currentTimestamp;</span><br><span class="line">            recentRandoms.clear();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// Same timestamp as previous keep generating randoms till new is found</span></span><br><span class="line">            <span class="keyword">while</span> (recentRandoms.contains(random)) &#123;</span><br><span class="line">                random = nextRandomPart();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        recentRandoms.add(random);</span><br><span class="line">        <span class="keyword">return</span> shiftedTimestamp | random;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">long</span> <span class="title">nextRandomPart</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> ThreadLocalRandom.current().nextLong() &gt;&gt;&gt; RANDOM_SHIFT;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个方法是参考Twitter Snowflake(一个来自Twitter的分布式ID算法)的java实现.</p>
+<p>确定问题的方法是重现问题,幸好这个工具类是孤独的,:) ,所以写个单元测试还是比较简单的.</p>
+<p>测试代码如下,简单来说就是模拟同一时间有多少生产ID的并发请求,当出现重复ID的时候测试失败.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LongIdTest</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testId_100</span><span class="params">()</span> <span class="keyword">throws</span> Throwable </span>&#123;</span><br><span class="line">        paralletTestThread(getMockTimes(<span class="number">100</span>), <span class="keyword">this</span>::getId);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">paralletTestThread</span><span class="params">(List&lt;Integer&gt; list, Supplier&lt;Long&gt; method)</span> </span>&#123;</span><br><span class="line">        Map idMap = <span class="keyword">new</span> ConcurrentHashMap();</span><br><span class="line"></span><br><span class="line">        list.parallelStream().forEach(t -&gt; &#123;</span><br><span class="line">            Long id = method.get();</span><br><span class="line"></span><br><span class="line">            assertNull(id.toString(), idMap.get(id));</span><br><span class="line"></span><br><span class="line">            idMap.put(id, System.nanoTime());</span><br><span class="line"></span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">long</span> <span class="title">getId</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> LongId.get();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> List&lt;Integer&gt; <span class="title">getMockTimes</span><span class="params">(<span class="keyword">int</span> maxTime)</span> </span>&#123;</span><br><span class="line">        List&lt;Integer&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; maxTime; i++)</span><br><span class="line">            list.add(i);</span><br><span class="line">        <span class="keyword">return</span> list;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p> 测试结果,当并发次数为1000次的时候,很容易重新问题.</p>
+<p> <img src="/img/2018/Id-Issue-1.png" alt="img"></p>
+<p> 虽然源码通过 <em>shiftedTimestamp | random</em> 来保证每次产生的ID是不一样的,但是实验结果表面尽管shiftedTimestamp和random每次都是不一样的,</p>
+<p> 但是与运算的结果却可能是一样的,知道问题原因就好处理了.</p>
+<p> 重新写了一个新的ID生产算法工具类如下,在规定的时间内缓存生产的ID,如果出现重复就重新生成.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LongIdThreadSafety</span> </span>&#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">private</span> Set&lt;Long&gt; recentRandoms = ConcurrentHashMap.&lt;Long&gt;newKeySet();</span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">synchronized</span> <span class="keyword">public</span> <span class="keyword">long</span> <span class="title">generate</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">long</span> currentTimestamp = System.currentTimeMillis();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (lastTimestamp.get() &gt; currentTimestamp) &#123;</span><br><span class="line">            <span class="comment">// Clock is running backwards so wait until it isn't</span></span><br><span class="line">            currentTimestamp = System.currentTimeMillis();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (lastTimestamp.get() != currentTimestamp) &#123;</span><br><span class="line">            <span class="comment">// timestamp has advanced so reset it and clear the previous cache</span></span><br><span class="line">            lastTimestamp.lazySet(currentTimestamp);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (lastTimestamp.get() - currentTimestamp &gt; MAX_TIME_MILLIS_CHANGE) &#123;</span><br><span class="line">            recentRandoms.clear();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (currentTimestamp &lt; EPOCH || currentTimestamp &gt; MAX_SIGNED_LONG) &#123;</span><br><span class="line">            <span class="comment">// The current time cannot be less than the EPOCH</span></span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">"Invalid System Clock was "</span> + <span class="keyword">new</span> Date(currentTimestamp));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">long</span> customTimestamp = currentTimestamp - EPOCH;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">long</span> shiftedTimestamp = customTimestamp &lt;&lt; TIME_SHIFT;</span><br><span class="line"></span><br><span class="line">        AtomicReference&lt;Long&gt; result = <span class="keyword">new</span> AtomicReference&lt;&gt;(<span class="keyword">null</span>);</span><br><span class="line">        AtomicReference&lt;Long&gt; random = <span class="keyword">new</span> AtomicReference&lt;&gt;(nextRandomPart());</span><br><span class="line"></span><br><span class="line">        makeUniqueId(shiftedTimestamp, result, random);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//        System.out.println(result.get() + " is build by " + shiftedTimestamp + " and " + random.get()</span></span><br><span class="line">        <span class="comment">//                + " on time " + new Date(currentTimestamp));</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> result.get();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">makeUniqueId</span><span class="params">(<span class="keyword">long</span> shiftedTimestamp, AtomicReference&lt;Long&gt; result, AtomicReference&lt;Long&gt; random)</span> </span>&#123;</span><br><span class="line">        result.set(shiftedTimestamp | random.get());</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (recentRandoms.contains(result.get())) &#123;</span><br><span class="line">            random.set(nextRandomPart());</span><br><span class="line">            result.set(shiftedTimestamp | random.get());</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (!recentRandoms.contains(result.get())) &#123;</span><br><span class="line">            recentRandoms.add(result.get());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">long</span> <span class="title">nextRandomPart</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> ThreadLocalRandom.current().nextLong() &gt;&gt;&gt; RANDOM_SHIFT;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>  同样用相同的测试代码来测试,测试1000,10000次都通过测试,Issue Fixed !</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testIdThreadSafety_1000</span><span class="params">()</span><span class="keyword">throws</span> Throwable</span>&#123;</span><br><span class="line">        paralletTestThread(getMockTimes(<span class="number">1000</span>),<span class="keyword">this</span>::getIdThreadSafety);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testIdThreadSafety_10000</span><span class="params">()</span><span class="keyword">throws</span> Throwable</span>&#123;</span><br><span class="line">        paralletTestThread(getMockTimes(<span class="number">10000</span>),<span class="keyword">this</span>::getIdThreadSafety);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">long</span> <span class="title">getIdThreadSafety</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> LongIdThreadSafety.get();</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+<p>   <img src="/img/2018/Id-Issue-2.png" alt="img"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2018/02/28/Tech-2018-2018-02-27-One-Issue-Cause-By-Id/" data-id="cjf9gd8bb003gvzznskqy4sdq" class="article-share-link">Teilen</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="mobile-Tech-2016-2016-11-09-resinWithJavaEE8" class="article article-type-mobile" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/10/20/Tech-2016-2016-11-09-resinWithJavaEE8/" class="article-date">
+  <time datetime="2016-10-20T02:53:11.000Z" itemprop="datePublished">2016-10-20</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Tech/">Tech</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/10/20/Tech-2016-2016-11-09-resinWithJavaEE8/">Resin 3 With JavaEE8</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Resin-3-With-JavaEE-8"><a href="#Resin-3-With-JavaEE-8" class="headerlink" title="Resin 3 With JavaEE 8"></a>Resin 3 With JavaEE 8</h1><p><img src="/img/2016/resin.png" alt="img"></p>
+<p>Resin 3 本身只支持JavaEE 6，要让它能允许JavaEE 8的应用是需要踩一些坑的。 ：）</p>
+<h1 id="NoSuchMethodError-javax-persistence-Table-indexes-Ljavax-persistence-Index"><a href="#NoSuchMethodError-javax-persistence-Table-indexes-Ljavax-persistence-Index" class="headerlink" title="NoSuchMethodError: javax.persistence.Table.indexes()[Ljavax/persistence/Index"></a>NoSuchMethodError: javax.persistence.Table.indexes()[Ljavax/persistence/Index</h1><p>Resin 3 支持JavaEE 6的规范， 对应的JPA版本是JPA 2， 而Hibernate 4.3开始使用JPA 2.1。</p>
+<p>运行时的会默认用resin/lib下的JPA 2，因为JPA 2的@Table不支持indexes属性，所以初始化Hibernate 4.3以上版本的时候会抛出javax.persistence.Table.indexes()错误。</p>
+<p><em>解决方案</em></p>
+<pre><code>简单粗暴的做法，就是禁止掉resin/lib/jpa-15.jar， 重命名成jpa-15.jar_bak之类，应用在运行的时候会用回Hibernate本身自带的JPA版本。
+</code></pre><h1 id="Unsupported-major-minor-version-52-0"><a href="#Unsupported-major-minor-version-52-0" class="headerlink" title="Unsupported major.minor version 52.0"></a>Unsupported major.minor version 52.0</h1><p>某些Resin 3的运行环境里会默认使用较低的JDK版本，比如Open JDK 7之类，所以运行JDK8编译过的类的时候会抛出Unsupported major.minor version。<br>查看resin的启动脚本/bin/httpd.sh  </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="built_in">test</span> -n <span class="string">"<span class="variable">$&#123;JAVA_HOME&#125;</span>"</span>; <span class="keyword">then</span></span><br><span class="line">  <span class="keyword">if</span> <span class="built_in">test</span> -z <span class="string">"<span class="variable">$&#123;JAVA_EXE&#125;</span>"</span>; <span class="keyword">then</span></span><br><span class="line">    JAVA_EXE=<span class="variable">$JAVA_HOME</span>/bin/java</span><br><span class="line">  <span class="keyword">fi</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="built_in">test</span> -z <span class="string">"<span class="variable">$&#123;JAVA_EXE&#125;</span>"</span>; <span class="keyword">then</span></span><br><span class="line">  JAVA_EXE=java</span><br><span class="line">  <span class="keyword">fi</span></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="built_in">exec</span> <span class="variable">$JAVA_EXE</span>  -jar <span class="variable">$&#123;RESIN_HOME&#125;</span>/lib/resin.jar $*</span><br></pre></td></tr></table></figure>
+<p>一般情况下设置${JAVA_HOME} 的环境变量为JDK8就好，我遇到一个比较坑的情况是Jenkins远程调用的时候，${JAVA_HOME}被变成了JDK7.</p>
+<p><em>解决方案</em></p>
+<pre><code>在启动脚本里指定指定${JAVA\_HOME}，并且export JAVA_HOME到环境变量 
+</code></pre><h1 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h1><p>＊ <a href="http://stackoverflow.com/questions/20734540/nosuchmethoderror-in-javax-persistence-table-indexesljavax-persistence-index" target="_blank" rel="noopener">http://stackoverflow.com/questions/20734540/nosuchmethoderror-in-javax-persistence-table-indexesljavax-persistence-index</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/10/20/Tech-2016-2016-11-09-resinWithJavaEE8/" data-id="cjf9gd8au0036vzzndctjtyap" class="article-share-link">Teilen</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="mobile-Tech-2016-2016-09-13-JavaConcurrency" class="article article-type-mobile" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/09/13/Tech-2016-2016-09-13-JavaConcurrency/" class="article-date">
+  <time datetime="2016-09-13T07:47:11.000Z" itemprop="datePublished">2016-09-13</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Tech/">Tech</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/09/13/Tech-2016-2016-09-13-JavaConcurrency/">Java Concurrency</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Java-并发"><a href="#Java-并发" class="headerlink" title="Java 并发"></a>Java 并发</h1><p>一谈起并发，就离开不了同步机制、线程安全。</p>
+<h1 id="同步机制"><a href="#同步机制" class="headerlink" title="同步机制"></a>同步机制</h1><p>Java常用的同步机制有： volatile , synchronized</p>
+<h2 id="volatile"><a href="#volatile" class="headerlink" title="volatile"></a>volatile</h2><p>用volatile修饰的变量就拥有2个特性： <em>可见性、禁止指令重排序优化。</em></p>
+<h3 id="可见性"><a href="#可见性" class="headerlink" title="可见性"></a>可见性</h3><p>保证变量对所有线程的的可见性，普通变量无法做到这点，只能通过主内存来传递。  </p>
+<p><img src="/img/2016/JavaCurrentMem.png" width="400"></p>
+<p>Java里的运算并非原子操作，导致volatile变量的运算在并发下也是不安全的。</p>
+<p>从内存可见性的角度，读取volatile变量等于进入同步代码块，写入volatile等于推出同步代码块。</p>
+<h3 id="禁止指令重排序优化"><a href="#禁止指令重排序优化" class="headerlink" title="禁止指令重排序优化"></a>禁止指令重排序优化</h3><p>指令重排序是指CPU允许多条指令不按程序规定的顺序分开发送给各相应电路单元处理。<br>volatile能保证处理器不发生乱序执行。</p>
+<h2 id="synchronized"><a href="#synchronized" class="headerlink" title="synchronized"></a>synchronized</h2><p>synchronized是最基本的互斥同步手段。</p>
+<p>synchronized关键字经过编译之后，会在同步块前后形成monitorenter 和monitorexit 2个字节码指令。根据虚拟机规范，执行monitorenter会尝试加锁， 执行monitorexit会释放锁。</p>
+<p>synchronized中的锁是非公平的，java.util.concurrent包下的ReentrantLock也有类似功能，但可以通过构造函数来实现公平锁。</p>
+<h2 id="volatile-vs-synchronized"><a href="#volatile-vs-synchronized" class="headerlink" title="volatile vs. synchronized"></a>volatile vs. synchronized</h2><p>|———–+————|<br>|volatile   | synchronized |<br>|:———|——-:|<br>|最轻量级   | 较重（悲观并发策略）|<br>|线程不安全 | 线程安全|<br>{: rules=”groups”}</p>
+<h1 id="线程安全"><a href="#线程安全" class="headerlink" title="线程安全"></a>线程安全</h1><pre><code>当多个线程访问一个对象时，如果不用考虑这些线程在运行时环境下的调度和交替执行，也不需要进行额外的同步，或者在调用方进行任何其它的协调操作，调用这个对象的行为都可以获得正确的结果，那这个对象是线程安全的。  
+</code></pre><ul>
+<li>无状态对象一定是线程安全的。</li>
+<li>不可变对象一定是线程安全的。</li>
+</ul>
+<p>Immutable对象一定是线程安全的，final关键字可以保证它是不变的。</p>
+<p>  java.util.concurrent包下的对象也都是线程安全的。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">线程安全</th>
+<th style="text-align:right">线程不安全</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">Vector、CopyOnWriteArrayList</td>
+<td style="text-align:right">ArrayList</td>
+</tr>
+<tr>
+<td style="text-align:left">HashTable、ConcurrentHashMap</td>
+<td style="text-align:right">HashMap</td>
+</tr>
+</tbody>
+</table>
+<p>{: rules=”groups”}</p>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ul>
+<li>《深入浅出Java虚拟机》  </li>
+</ul>
+<p><img src="https://img3.doubanio.com/lpic/s27458236.jpg" alt="img"></p>
+<ul>
+<li>《Java并发编程实战》  </li>
+</ul>
+<p><img src="https://img3.doubanio.com/lpic/s7663093.jpg" alt="img"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/09/13/Tech-2016-2016-09-13-JavaConcurrency/" data-id="cjf9gd8an0032vzznrlhoxgut" class="article-share-link">Teilen</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="mobile-Tech-2016-2016-09-12-JavaMemModel" class="article article-type-mobile" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/09/12/Tech-2016-2016-09-12-JavaMemModel/" class="article-date">
+  <time datetime="2016-09-12T10:23:16.000Z" itemprop="datePublished">2016-09-12</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Tech/">Tech</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/09/12/Tech-2016-2016-09-12-JavaMemModel/">Java Memory Model</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Java-内存模型"><a href="#Java-内存模型" class="headerlink" title="Java 内存模型"></a>Java 内存模型</h1><p>Java不像C＋＋由程序员直接管理内存，而是由虚拟机内存管理机制管理。</p>
+<p>以JDK1.7为例子，内存模型如下：</p>
+<h1 id="内存模型"><a href="#内存模型" class="headerlink" title="内存模型"></a>内存模型</h1><p><img src="/img/2016/JMM.png" width="600"></p>
+<ul>
+<li>程序计数器 （Program Counter Register）</li>
+<li>Java虚拟机栈 （Java Virtual Machine Stacks）</li>
+<li>本地方法栈 （Native Method Stack）</li>
+<li>Java堆 （Java Heap）</li>
+<li>方法区 （Method Area）</li>
+<li>运行时常量池 （Runtime Constant Pool）</li>
+<li>直接内存 （Direct Memory）</li>
+</ul>
+<h2 id="程序计数器-（Program-Counter-Register）"><a href="#程序计数器-（Program-Counter-Register）" class="headerlink" title="程序计数器 （Program Counter Register）"></a>程序计数器 （Program Counter Register）</h2><p>程序计数器是一块较小的线程私有的内存空间，用了记录正在执行的虚拟机字节码指令的地址。<br>通过改变这个计数器的值来选取下一条字节码指令，分支、循环、跳转、异常处理、线程恢复等功能都需要依靠它来实现。</p>
+<p>执行Native方法的时候，其值为空（Undefined）。</p>
+<p>此内存区域是虚拟机规范唯一没有规定任何OutOfMemoryError的区域。</p>
+<h2 id="Java虚拟机栈-（Java-Virtual-Machine-Stacks）"><a href="#Java虚拟机栈-（Java-Virtual-Machine-Stacks）" class="headerlink" title="Java虚拟机栈 （Java Virtual Machine Stacks）"></a>Java虚拟机栈 （Java Virtual Machine Stacks）</h2><p>Java虚拟机栈也是线程私有的内存空间，它的生命周期和线程一样。</p>
+<p>它是描述Java方法执行的内存模型：</p>
+<pre><code>每个方法在执行的同时都会创建一个栈桢（Stack Frame），用于存储局部变量表、操作数栈、动态链接、方法出口等信息。
+</code></pre><p>每个方法从调用到结束，就对应一个栈桢在虚拟机栈中入栈到出栈的过程。</p>
+<h2 id="本地方法栈-（Native-Method-Stack）"><a href="#本地方法栈-（Native-Method-Stack）" class="headerlink" title="本地方法栈 （Native Method Stack）"></a>本地方法栈 （Native Method Stack）</h2><p>本地方法栈 （Native Method Stack）与Java虚拟机栈的作用非常相似，其区别是：</p>
+<pre><code>虚拟机栈为Java方法服务，本地方法栈为虚拟机用到的Native方法服务。
+</code></pre><h2 id="Java堆-（Java-Heap）"><a href="#Java堆-（Java-Heap）" class="headerlink" title="Java堆 （Java Heap）"></a>Java堆 （Java Heap）</h2><p>Java堆是所有线程共享的内存区域，是最大的一块。</p>
+<p>其唯一目的就是存放对象实例，也是GC管理的主要区域。</p>
+<p>从内存回收的角度，还可以细分为： 新生代（Young Generation）和老年代（Old Generation）等。</p>
+<p><img src="http://cdn1.infoqstatic.com/statics_s2_20160914-0333/resource/news/2016/09/APM-jClarity-jvm-heap-oldgen/zh/resources/2.png" alt="img"></p>
+<p>年轻代为创建的短期对象，失效之后很快会被垃圾回收。该区又被划分为Eden和两个Survivor区域。</p>
+<p>老年代存放的多数为存活时间较长的对象。</p>
+<p>垃圾回收GC分为两种Minor GC、Full GC；</p>
+<p>Minor GC发生频繁，但是仅针对年轻代。</p>
+<h3 id="Full-GC-触发条件"><a href="#Full-GC-触发条件" class="headerlink" title="Full GC 触发条件"></a>Full GC 触发条件</h3><ul>
+<li>调用System.gc()</li>
+<li>老年代空间不足</li>
+<li>永久代空间不足</li>
+<li>空间分配担保失败</li>
+<li>Cocurrent mode failure</li>
+</ul>
+<h2 id="方法区-（Method-Area）"><a href="#方法区-（Method-Area）" class="headerlink" title="方法区 （Method Area）"></a>方法区 （Method Area）</h2><p>方法区用于存储已被虚拟机加载的类信息、常量、静态变量、即时编译器编译后的代码等数据。</p>
+<p>虽然和Java堆一样是各个线程共享的内存区域，却有一个别名 Non－Heap （非堆）</p>
+<p>在HotSpot虚拟机上“方法区”被更多人称为“永久代” （Permanent Generation），但对其它虚拟机并不存在这样的概念。</p>
+<p><img src="/img/2016/Java7MM.png" width="800"></p>
+<p>而且在JDK8里，永久代也被Metaspace所替代，位置也移到native memory里。</p>
+<p>这样做的好处在于：简化GC的算法，full gc的时候更高效率。</p>
+<p><img src="/img/2016/Java8MM.png" width="800"></p>
+<h2 id="运行时常量池-（Runtime-Constant-Pool）"><a href="#运行时常量池-（Runtime-Constant-Pool）" class="headerlink" title="运行时常量池 （Runtime Constant Pool）"></a>运行时常量池 （Runtime Constant Pool）</h2><p>运行时常量池 是方法区的一部分，用于存储编译期生成的各种字面量和符号引用，在类加载后进入方法区的运行时常量池中。</p>
+<h2 id="直接内存-（Direct-Memory）"><a href="#直接内存-（Direct-Memory）" class="headerlink" title="直接内存 （Direct Memory）"></a>直接内存 （Direct Memory）</h2><p>直接内存不是虚拟机运行时数据区的一部分，也不是Java虚拟机规范中定义的内存区域。<br>它属于堆外内存，受到本机内存大小、寻址空间的限制。</p>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ul>
+<li>《深入浅出Java虚拟机》  </li>
+</ul>
+<p><img src="https://img3.doubanio.com/lpic/s27458236.jpg" alt="img"></p>
+<ul>
+<li><a href="http://www.infoq.com/cn/news/2016/09/APM-jClarity-jvm-heap-oldgen" target="_blank" rel="noopener">JVM堆内存监测的一种方式，性能调优依旧任重道远</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/09/12/Tech-2016-2016-09-12-JavaMemModel/" data-id="cjf9gd8al0030vzzn2vv0o8nl" class="article-share-link">Teilen</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="mobile-Tech-2016-2016-09-09-jvm-classloader" class="article article-type-mobile" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/09/09/Tech-2016-2016-09-09-jvm-classloader/" class="article-date">
+  <time datetime="2016-09-09T10:19:33.000Z" itemprop="datePublished">2016-09-09</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Tech/">Tech</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/09/09/Tech-2016-2016-09-09-jvm-classloader/">JVM Class Loader</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="浅谈类加载机制"><a href="#浅谈类加载机制" class="headerlink" title="浅谈类加载机制"></a>浅谈类加载机制</h1><p>本文以JDK1.7为例子，简单地介绍一下类加载的原理。</p>
+<h1 id="类生命周期"><a href="#类生命周期" class="headerlink" title="类生命周期"></a>类生命周期</h1><p>说起类加载，就不得不先谈一下类的生命周期。<br>主要有以下7个阶段：</p>
+<ul>
+<li>加载（Loading）</li>
+<li>连接 （Linking）<ul>
+<li>验证 （Verification）</li>
+<li>准备 （Preparation）</li>
+<li>解析 （Resolution）</li>
+</ul>
+</li>
+<li>初始化 （Initialization）</li>
+<li>使用 （Using）</li>
+<li>卸载 （Unloading）</li>
+</ul>
+<p><img src="/img/2016/Jvm-ClassLife.png" width="800">  </p>
+<p>验证、准备、解析3部分统称连接。  </p>
+<h2 id="加载"><a href="#加载" class="headerlink" title="加载"></a>加载</h2><p>在加载阶段，虚拟机需要完成以下3件事情：  </p>
+<ul>
+<li>通过一个类的全限定名来获取定义此类的二进制字节流。</li>
+<li>将这个字节流所代表的静态存储结构转化为方法区的运行时数据结构。</li>
+<li>在内存中生成一个代表这个类的java.lang.Class对象，作为方法区这个类的各种数据的访问接口。</li>
+</ul>
+<h2 id="初始化时机"><a href="#初始化时机" class="headerlink" title="初始化时机"></a>初始化时机</h2><p>虚拟机规范严格规定 <em>有且只有</em> 5种情况必须立即对类进行初始化：  </p>
+<ul>
+<li>使用关键字new实例化一个对象、读取或设置静态字段的时候  </li>
+<li>使用java.lang.reflect包进行反射调用的时候</li>
+<li>初始化一个子类的时候，如果其父类为初始化，需要先触发。</li>
+<li>虚拟机启动，用户指定的一个包含main（）方法的执行主类的时候。</li>
+<li>使用动态语言，一个java.lang.invoke.MethodHandle实例，<br>最后解析结果”REF_getStatic, REF_putStatic,REF_invokeStatic”句柄所对应的未进行过初始化的类。</li>
+</ul>
+<h1 id="类加载器"><a href="#类加载器" class="headerlink" title="类加载器"></a>类加载器</h1><p>类加载器的主要作用：就是实现“通过一个类的全限定名来获取定义此类的二进制字节流” 这个动作的。</p>
+<p>类加载器主要有3种：</p>
+<ul>
+<li><p>启动类加载器 （Bootstrap ClassLoader）:  C＋＋实现，负责加载&lt;JAVA_HOME&gt;\lib目录下（或-Xbootclasspath指定路径）的类库。<br>无法被Java程序直接引用。</p>
+</li>
+<li><p>扩张类加载器 （Extension ClassLoader）:  sun.misc.Launcher$ExtClassLoader实现，负责加载&lt;JAVA_HOME&gt;\lib\ext目录下(或java.ext.dirs指定路径)的类库。<br>开发者可以直接使用。</p>
+</li>
+<li><p>应用程序类加载器（Application ClassLoader）: sun.misc.Launcher$ClassLoader实现，负责加载用户类路径（ClassPath）下的类库。<br>开发者可以直接使用。</p>
+</li>
+</ul>
+<h2 id="双亲委托模型-（Parents-Delegation-Model）"><a href="#双亲委托模型-（Parents-Delegation-Model）" class="headerlink" title="双亲委托模型 （Parents Delegation Model）"></a>双亲委托模型 （Parents Delegation Model）</h2><p><img src="/img/2016/Jvm-ClassLoader.png" width="800">  </p>
+<p>除了顶层启动类加载器之外，其余的类加载器都有自己的父类加载器，他们的父子关系一般不会以继承（Inheritance）的关系来实现，而是通过组合（Composition）关系来复用。  </p>
+<p>双亲委托模型的原理是：</p>
+<ul>
+<li>当收到类加载请求，不会自己去加载，而是委托给父类加载器。</li>
+<li>每一层都一样，最终都到达顶层的启动类加载器中。</li>
+<li>只有父加载器无法加载，子加载器才会尝试自己加载。</li>
+</ul>
+<p>好处：  </p>
+<pre><code>Java类有顶级优先级，保证了Java程序的稳定运作。
+（例如rt.jar里的java.lang.Object,无论哪一个类加载器加载，最终都会委派给启动类加载器加载）
+</code></pre><p>双亲委托模型并不是强制性的约束模型，某些情况下也有例外：</p>
+<ul>
+<li>JDK1.2之后才引入“双亲委托” ，向前兼容JDK1.0的用户自定义ClassLoader。</li>
+<li>涉及SPI的加载方式： JNDI、JDBC、JCE、JAXB、JBI等。</li>
+<li>OSGi环境下，类加载器不再是双亲委托模型的树状结构，而是更加复杂的网状结构。</li>
+</ul>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ul>
+<li>《深入浅出Java虚拟机》  </li>
+</ul>
+<p><img src="https://img3.doubanio.com/lpic/s27458236.jpg" alt="img"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/09/09/Tech-2016-2016-09-09-jvm-classloader/" data-id="cjf9gd8aj002yvzzn0ruup4f9" class="article-share-link">Teilen</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="mobile-Art-2015-2015-07-03-RichardsonMaturityModel" class="article article-type-mobile" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/09/07/Art-2015-2015-07-03-RichardsonMaturityModel/" class="article-date">
+  <time datetime="2016-09-07T02:43:56.000Z" itemprop="datePublished">2016-09-07</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Art/">Art</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/09/07/Art-2015-2015-07-03-RichardsonMaturityModel/">Richardson Maturity Model</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Richardson-Restful成熟度模型"><a href="#Richardson-Restful成熟度模型" class="headerlink" title="Richardson Restful成熟度模型"></a>Richardson Restful成熟度模型</h1><h1 id="走向荣耀的REST"><a href="#走向荣耀的REST" class="headerlink" title="走向荣耀的REST"></a>走向荣耀的REST</h1><p>Leonard Richardson提出的一个模型，把REST方法的主要元素分解成三步。<br>它们包括：资源，http 动词，超媒体控制。</p>
+<p>作者 : Martin Fowler<br>译者 : A生<br><a href="http://martinfowler.com/articles/richardsonMaturityModel.html#level0" target="_blank" rel="noopener">原文地址</a></p>
+<hr>
+<p>内容  </p>
+<p>[Level 0]<br>[Level 1 - 资源][]<br>[Level 2 - http 动词][]<br>[Level 3 - 超媒体控制][]  </p>
+<hr>
+<p>最近我正在读《 <a href="http://www.amazon.com/gp/product/0596805829?ie=UTF8&amp;tag=martinfowlerc-20&amp;linkCode=as2&amp;camp=1789&amp;creative=9325&amp;creativeASIN=0596805829" target="_blank" rel="noopener">Rest In Practice</a> 》的草稿， 一本我的同事们写的书。<br>他们的目的是解释如何使用Restful web服务来处理许多企业面临着的集成问题。<br>这本书的核心是认为网络是一个存在的、经证实工作得很好的、大规模可伸缩的分布式系统。<br>我们根据这样的想法，可以更容易地构建集成系统。  </p>
+<p><img src="/img/2015/rmm-overview.png" alt="img"><br>Figure 1: Steps toward REST  </p>
+<p>为了更好的解释一个web风格系统的特殊属性，作者们用了一个由Leonard Richardson提出的restful成熟度模型，并在一个QCon talk的时候解释过它。<br>这个模型是很好的方式去思考那些技术，所以我把自己的解释也穿插在内。<br>（这里关于协议的例子只是为了说明问题，我不认为它值得去写代码和测试，所以在细节实现上可能会有些问题。）</p>
+<hr>
+<h1 id="Level-0"><a href="#Level-0" class="headerlink" title="[Level 0]"></a>[Level 0]</h1><p>这个模型的起点是，为了远程调用，使用HTTP来作为一个传输系统，但不使用任何web的机制。<br>基本上你所做的是使用HTTP作为隧道机制为自己的远程交互机制,通常基于<a href="http://www.eaipatterns.com/EncapsulatedSynchronousIntegration.html" target="_blank" rel="noopener">远程过程调用</a>。</p>
+<p><img src="/img/2015/rmm-level0.png" alt="img"><br>Figure 2: An example interaction at Level 0</p>
+<p>让我们假设我要预约我的医生。<br>我的预约软件首先需要知道我的医生什么时候有空，所以它向医院的预约系统请求这些信息。<br>在level 0的情景下，医院将在某个URL开放一个服务端点。<br>然后我向该端点post一个带有我的请求所有细节的文档。  </p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">POST /appointmentService HTTP/1.1</span><br><span class="line">[various other headers]</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">openSlotRequest</span> <span class="attr">date</span> = <span class="string">"2010-01-04"</span> <span class="attr">doctor</span> = <span class="string">"mjones"</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+<p>服务器会返回一个给我对应信息的文档。  </p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">openSlotList</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">slot</span> <span class="attr">start</span> = <span class="string">"1400"</span> <span class="attr">end</span> = <span class="string">"1450"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">doctor</span> <span class="attr">id</span> = <span class="string">"mjones"</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">slot</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">slot</span> <span class="attr">start</span> = <span class="string">"1600"</span> <span class="attr">end</span> = <span class="string">"1650"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">doctor</span> <span class="attr">id</span> = <span class="string">"mjones"</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">slot</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">openSlotList</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>我在这里用了XML作为例子，但其内容可以实际上可以是任何格式：JSON、YAML、key－value pairs，或者其他自定义格式。</p>
+<p>我的下一步是进行预约，所以我可以向服务端点再次post一个文档。  </p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">POST /appointmentService HTTP/1.1</span><br><span class="line">[various other headers]</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">appointmentRequest</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">slot</span> <span class="attr">doctor</span> = <span class="string">"mjones"</span> <span class="attr">start</span> = <span class="string">"1400"</span> <span class="attr">end</span> = <span class="string">"1450"</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">patient</span> <span class="attr">id</span> = <span class="string">"jsmith"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">appointmentRequest</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>顺利的话，我会收到一个告诉我预约成功的回应。  </p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">HTTP/1.1 200 OK</span><br><span class="line">[various headers]</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">appointment</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">slot</span> <span class="attr">doctor</span> = <span class="string">"mjones"</span> <span class="attr">start</span> = <span class="string">"1400"</span> <span class="attr">end</span> = <span class="string">"1450"</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">patient</span> <span class="attr">id</span> = <span class="string">"jsmith"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">appointment</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>如果出现问题，某人在我之前就预定了，那我会在回答的结构内得到某种错误消息。  </p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">HTTP/1.1 200 OK</span><br><span class="line">[various headers]</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">appointmentRequestFailure</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">slot</span> <span class="attr">doctor</span> = <span class="string">"mjones"</span> <span class="attr">start</span> = <span class="string">"1400"</span> <span class="attr">end</span> = <span class="string">"1450"</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">patient</span> <span class="attr">id</span> = <span class="string">"jsmith"</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">reason</span>&gt;</span>Slot not available<span class="tag">&lt;/<span class="name">reason</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">appointmentRequestFailure</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>目前为止，这就是一个直截了当的RPC风格的系统。<br>它很简单，它只是来回抛出普通XML（POX）。<br>同样原理，如果你使用SOAP 或 XML－RPC的话，唯一的不同就是你怎样去封装XML消息。  </p>
+<h1 id="Level-1-资源"><a href="#Level-1-资源" class="headerlink" title="[Level 1 - 资源]"></a>[Level 1 - 资源]</h1><p>向RMM迈向荣耀的第一步是引入资源。</p>
+<p><img src="/img/2015/rmm-level1.png" alt="img"><br>Figure 3: Level 1 adds resources</p>
+<p>所以我们初始的查询里，我们会有给医生的一个资源。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">POST /doctors/mjones HTTP/1.1</span><br><span class="line">[various other headers]</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">openSlotRequest</span> <span class="attr">date</span> = <span class="string">"2010-01-04"</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+<p>答复里携带同样基本的消息，但是每一个时间段都是一个可以独立对应的资源。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">HTTP/1.1 200 OK</span><br><span class="line">[various headers]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">openSlotList</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">slot</span> <span class="attr">id</span> = <span class="string">"1234"</span> <span class="attr">doctor</span> = <span class="string">"mjones"</span> <span class="attr">start</span> = <span class="string">"1400"</span> <span class="attr">end</span> = <span class="string">"1450"</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">slot</span> <span class="attr">id</span> = <span class="string">"5678"</span> <span class="attr">doctor</span> = <span class="string">"mjones"</span> <span class="attr">start</span> = <span class="string">"1600"</span> <span class="attr">end</span> = <span class="string">"1650"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">openSlotList</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>带着特殊资源的预约意味着post着一个特定的时间段。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">POST /slots/1234 HTTP/1.1</span><br><span class="line">[various other headers]</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">appointmentRequest</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">patient</span> <span class="attr">id</span> = <span class="string">"jsmith"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">appointmentRequest</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>一切顺利的话，我会得到一个跟之前相似的回应。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">HTTP/1.1 200 OK</span><br><span class="line">[various headers]</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">appointment</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">slot</span> <span class="attr">id</span> = <span class="string">"1234"</span> <span class="attr">doctor</span> = <span class="string">"mjones"</span> <span class="attr">start</span> = <span class="string">"1400"</span> <span class="attr">end</span> = <span class="string">"1450"</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">patient</span> <span class="attr">id</span> = <span class="string">"jsmith"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">appointment</span></span></span><br></pre></td></tr></table></figure>
+<p>现在的区别是任何人需要做关于预约的任何事情，如测试一些预定，<br>他们会先持有预约的资源，那可能是一个URL（e.g. <a href="http://royalhope.nhs.uk/slots/1234/appointment）" target="_blank" rel="noopener">http://royalhope.nhs.uk/slots/1234/appointment）</a>,<br>然后post那个资源。  </p>
+<p>对于像我这样一个（面向）对象佬，这个就像是去定义对象的概念。<br>而不是在以太之间调用函数和传参，我们调用一个为其他信息提供参数的特别的对象。  </p>
+<h1 id="Level-2-http-动词"><a href="#Level-2-http-动词" class="headerlink" title="[Level 2 - http 动词]"></a>[Level 2 - http 动词]</h1><p>我在所有level 0 和 1之间的交互里使用HTTP POST 动词，但是一些人用GETs 来取代或添加。<br>在那些level里，那并没有多少不同，他们都是被用作于允许您通过HTTP交互的隧道传输机制。<br>level 2 比这个更进一步，在HTTP本身的机制里尽可能地使用HTTP动词。</p>
+<p><img src="/img/2015/rmm-level2.png" alt="img"><br>Figure 4: Level 2 addes HTTP verbs  </p>
+<p>为了我们列表中的时间段，这个意味着我们要使用GET。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">GET /doctors/mjones/slots?date=20100104&amp;status=open HTTP/1.1</span><br><span class="line">Host: royalhope.nhs.uk</span><br></pre></td></tr></table></figure>
+<p>答复和之前一样使用POST，</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">HTTP/1.1 200 OK</span><br><span class="line">[various headers]</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">openSlotList</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">slot</span> <span class="attr">id</span> = <span class="string">"1234"</span> <span class="attr">doctor</span> = <span class="string">"mjones"</span> <span class="attr">start</span> = <span class="string">"1400"</span> <span class="attr">end</span> = <span class="string">"1450"</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">slot</span> <span class="attr">id</span> = <span class="string">"5678"</span> <span class="attr">doctor</span> = <span class="string">"mjones"</span> <span class="attr">start</span> = <span class="string">"1600"</span> <span class="attr">end</span> = <span class="string">"1650"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">openSlotList</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>在level 2里，像这样在请求中使用GET是至关重要的。<br>HTTP定义GET为一个安全的操作，它不会对任何事物的状态作出重大改变。<br>这样允许我们在任何次数、任何顺序去安全地调用GETs，每次都得到相同的结果。<br>一个重要的结论是：它允许任何参与者在请求的路由里使用缓存，这是一个让web正常发挥它本身特性的关键元素。<br>HTTP包括了很多措施去支持缓存，可以用于任何交互者的沟通里。<br>遵循HTTP的规则，让我们能够去利用这种能力的优点。  </p>
+<p>为了预约，我们需要一个HTTP动词去改变状态，一个Post或PUT。<br>我会使用和之前一样的POST。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">POST /slots/1234 HTTP/1.1</span><br><span class="line">[various other headers]</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">appointmentRequest</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">patient</span> <span class="attr">id</span> = <span class="string">"jsmith"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">appointmentRequest</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>在这里权衡使用POST和PUT超过了我在这要说的范围，也许某天我会为了他们另起一篇文章。<br>但我想指出,一些人错误地把POST/PUT等同于create/update。它们之间的选择是相当不同的。  </p>
+<p>就算我在level 1用于同样的post，那里有另外一个重要的不同之处，在于远程的服务怎样去回应。<br>如果一切顺利，服务应答了一个响应代码201，来表明这个世界上多了一个新的资源。  </p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">HTTP/1.1 201 Created</span><br><span class="line">Location: slots/1234/appointment</span><br><span class="line">[various headers]</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">appointment</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">slot</span> <span class="attr">id</span> = <span class="string">"1234"</span> <span class="attr">doctor</span> = <span class="string">"mjones"</span> <span class="attr">start</span> = <span class="string">"1400"</span> <span class="attr">end</span> = <span class="string">"1450"</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">patient</span> <span class="attr">id</span> = <span class="string">"jsmith"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">appointment</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>201的响应包括一个位置属性的URI，所以客户端在未来可以去用GET那个资源的当前状态。<br>这里的响应还包括该资源的展示，去保存当前客户端一个额外的调用。  </p>
+<p>另外一个不同的区别，如果那里出现错误，如某人有预定的那个时间。  </p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">HTTP/1.1 409 Conflict</span><br><span class="line">[various headers]</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">openSlotList</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">slot</span> <span class="attr">id</span> = <span class="string">"5678"</span> <span class="attr">doctor</span> = <span class="string">"mjones"</span> <span class="attr">start</span> = <span class="string">"1600"</span> <span class="attr">end</span> = <span class="string">"1650"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">openSlotList</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>这个应答中重要的部分，用一个HTTP的响应代码去识别那里出现了错误。<br>在这种情况下,409似乎是一个不错的选择,表明其他人已经在一个不兼容的方式下去更新资源。<br>而不是使用响应代码200但又包含了错误的响应，在level 2 我们显然使用某种像这样的错误响应。<br>那是由协议设计者来决定使用什么代码，但是一个错误出现时，应该使用一个非2xx的响应代码。<br>Level 2 介绍了使用HTTP动词和HTTP响应代码。  </p>
+<p>在这里有一个矛盾。<br>REST提倡使用所有的HTTP动词。<br>他们也在证明他们的方法：REST是试图学习web的实际成功的一面。<br>但是万维网在实际应用很少使用PUT或DELETE。<br>合理使用PUT和DELETE的情况越来越多，但是web的存在证明并不是其中一个。  </p>
+<p>支持web存在的关键元素，是严格地分离来安全（例如GET）和非安全的操作，一起用状态码来帮助沟通遇到的各种错误。  </p>
+<h1 id="Level-3-超媒体控制"><a href="#Level-3-超媒体控制" class="headerlink" title="[Level 3 - 超媒体控制]"></a>[Level 3 - 超媒体控制]</h1><p>最后的level介绍了一个你经常听到的一个丑陋的缩写：HATEOAS (Hypertext As The Engine Of Application State)。<br>它解决的问题是：如何从一个开放的时间段里，去知道预约应该做些什么？  </p>
+<p><img src="/img/2015/rmm-level3.png" alt="img"><br>Figure 5: Level 3 adds hypermedia controls  </p>
+<p>我们开始同样初始化的GET，跟我们在level 2 发送的一样。  </p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">GET /doctors/mjones/slots?date=20100104&amp;status=open HTTP/1.1</span><br><span class="line">Host: royalhope.nhs.uk</span><br><span class="line"></span><br><span class="line">``` </span><br><span class="line"></span><br><span class="line">但是应答里多了一个新元素  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">``` xml</span><br><span class="line">HTTP/1.1 200 OK</span><br><span class="line">[various headers]</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">openSlotList</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">slot</span> <span class="attr">id</span> = <span class="string">"1234"</span> <span class="attr">doctor</span> = <span class="string">"mjones"</span> <span class="attr">start</span> = <span class="string">"1400"</span> <span class="attr">end</span> = <span class="string">"1450"</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span> = <span class="string">"/linkrels/slot/book"</span> </span></span><br><span class="line"><span class="tag">           <span class="attr">uri</span> = <span class="string">"/slots/1234"</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">slot</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">slot</span> <span class="attr">id</span> = <span class="string">"5678"</span> <span class="attr">doctor</span> = <span class="string">"mjones"</span> <span class="attr">start</span> = <span class="string">"1600"</span> <span class="attr">end</span> = <span class="string">"1650"</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span> = <span class="string">"/linkrels/slot/book"</span> </span></span><br><span class="line"><span class="tag">           <span class="attr">uri</span> = <span class="string">"/slots/5678"</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">slot</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">openSlotList</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>现在每一个时间段包含了一个URI，告诉我们如何去预约。  </p>
+<p>超媒体控制的关键在于告诉我们，接下来我们能做什么，和我们需要操作的资源的URI。<br>而不是我们必须要知道那里可以post我们的预约请求，超媒体控制的应答里告诉了我们如何去做。  </p>
+<p>POST 会再次复制level 2的</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">POST /slots/1234 HTTP/1.1</span><br><span class="line">[various other headers]</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">appointmentRequest</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">patient</span> <span class="attr">id</span> = <span class="string">"jsmith"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">appointmentRequest</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>然后应答里包括了一系列为了不同事情的下一步的超媒体控制。  </p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">HTTP/1.1 201 Created</span><br><span class="line">Location: http://royalhope.nhs.uk/slots/1234/appointment</span><br><span class="line">[various headers]</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">appointment</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">slot</span> <span class="attr">id</span> = <span class="string">"1234"</span> <span class="attr">doctor</span> = <span class="string">"mjones"</span> <span class="attr">start</span> = <span class="string">"1400"</span> <span class="attr">end</span> = <span class="string">"1450"</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">patient</span> <span class="attr">id</span> = <span class="string">"jsmith"</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span> = <span class="string">"/linkrels/appointment/cancel"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">uri</span> = <span class="string">"/slots/1234/appointment"</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span> = <span class="string">"/linkrels/appointment/addTest"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">uri</span> = <span class="string">"/slots/1234/appointment/tests"</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span> = <span class="string">"self"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">uri</span> = <span class="string">"/slots/1234/appointment"</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span> = <span class="string">"/linkrels/appointment/changeTime"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">uri</span> = <span class="string">"/doctors/mjones/slots?date=20100104@status=open"</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span> = <span class="string">"/linkrels/appointment/updateContactInfo"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">uri</span> = <span class="string">"/patients/jsmith/contactInfo"</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span> = <span class="string">"/linkrels/help"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">uri</span> = <span class="string">"/help/appointment"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">appointment</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>超媒体控制一个明显的好处在于：允许服务端在不破坏客户端的情况下，去修改它自己的URI scheme。<br>除了最初的入口点，只要客户端寻找“addTest” 链接URI，服务端团队可以处理所有的URI。   </p>
+<p>一个长远的好处就是它帮助客户端的开发者去探索协议。<br>那个链接给客户端开发者一个接下来可能是什么的提示。<br>它不会给予所有的信息：指向同一个URI，“最近的”和“取消”的控制－－他们需要找出一个是GET和另外一个是DELETE。<br>但至少它给了他们一个起点,去考虑的更多信息，和在协议文档里寻找一个类似的URI。  </p>
+<p>同样地它允许服务端团队通过响应里的新链接去宣传新的功能。<br>如果客户端开发者密切留意那些未知的链接，这些链接可以触发进一步的探索。  </p>
+<p>那里没有绝对的标准关于如何去表示超媒体控制。<br>我在这里所做的是，在一个实践的团队里去使用当前建议的REST，这是遵循ATOM （<a href="http://atompub.org/rfc4287.html" target="_blank" rel="noopener">RFC 4287</a> ）<br>我为了一个目标的URI和一个rel属性，用一个带一个uri属性的 <link> 元素去描述这种关系。<br>一个众所周知的关系(如引用自己本身的元素)是赤裸的,任何特定的服务器是一个完全限定的URI。<br>ATOM说明知名linkrels的定义是：<a href="http://www.iana.org/assignments/link-relations/link-relations.xhtml" target="_blank" rel="noopener">链接关系的注册表</a><br>我所写的这些界限于ATOM所做的，通常被看作是安静的level 3里一个领导者。  </p>
+<hr>
+<p>Levels的定义</p>
+<p>我应该强调RMM,是一个好的方式去思考什么是REST的元素,而不是一个REST本身级别的的定义。<br>Roy Fielding已经清晰地指出 <a href="http://roy.gbiv.com/untangled/2008/rest-apis-must-be-hypertext-driven" target="_blank" rel="noopener">level 3 是REST的一个前置条件</a><br>就像软件里的很多缩写，REST拥有许多的定义，但从Roy Fielding 杜撰了这个缩写开始，他的定义应该比大多数人更有分量。  </p>
+<p>我觉得这个RMM有用的是,它提供了一个很好的方式，一步步去理解restfull思维背后的基本想法。<br>因此我认为这是来帮助我们了解概念的工具，而不是某种评价机制。<br>我不认为我们有足够多的例子，去真正确保restful方式是集成系统的正确方法。<br>在我建议的大多数情况下，我认为这是一个非常有吸引力的方法。  </p>
+<p>和Ian Robinson讨论这个时，他强调当Leonard Richardson首次提出它时，<br>这个模型具有吸引力的地方是，这是常见的设计技术的关系。  </p>
+<pre><code>+ Level 1 处理复杂性的问题通过使用分而治之,把一个大型的服务端点分解成多个资源。
+
++ Level 2 引入一组标准的动词,这样我们可以以同样的方式处理类似的问题,消除了不必要的不确定性。
+
++ Level 3 引入可查找性,提供一种方式让协议更具可读性。
+</code></pre><p>结果是，一个模型帮助我们去思考我们想要一个怎样的HTTP服务，去提供和设计人们希望与之交互的期望。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/09/07/Art-2015-2015-07-03-RichardsonMaturityModel/" data-id="cjf9gd895001qvzzn4c2fwxf5" class="article-share-link">Teilen</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="mobile-Tech-2015-2015-09-28-FirstTryOfGatling" class="article article-type-mobile" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/09/02/Tech-2015-2015-09-28-FirstTryOfGatling/" class="article-date">
+  <time datetime="2016-09-02T03:02:06.000Z" itemprop="datePublished">2016-09-02</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Tech/">Tech</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/09/02/Tech-2015-2015-09-28-FirstTryOfGatling/">First Try of Gatling</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="次时代压力测试工具：Gatling初体验"><a href="#次时代压力测试工具：Gatling初体验" class="headerlink" title="次时代压力测试工具：Gatling初体验"></a>次时代压力测试工具：Gatling初体验</h1><p><img src="/img/2015/gatling1.png" width="800"></p>
+<h1 id="为什么用Gatling？"><a href="#为什么用Gatling？" class="headerlink" title="为什么用Gatling？"></a>为什么用Gatling？</h1><p>因工作需要，要对HTTP接口进行专门的压力测试。<br>经过一番考虑，我选择了 <a href="http://gatling.io/" target="_blank" rel="noopener">Gatling</a> 。</p>
+<pre><code>Gatling 作为次时代的压力测试工具，具有高性能，结果报表友好，支持DSL等特点。
+</code></pre><p>不同于它的前辈JMeter， Gatling 是基于Scala、Akka、Netty的。<br>优点在于它对多并发测试有着强力的性能表现，缺点自然是学习曲线稍微高一点。  </p>
+<p><em>所以在性能上，Gatling的表现是优于JMeter的，这也是我为什么选择它的原因。</em><br><img src="/img/2015/gatling2.png" alt="img"></p>
+<h1 id="怎么用Gatling？"><a href="#怎么用Gatling？" class="headerlink" title="怎么用Gatling？"></a>怎么用Gatling？</h1><p>既然它是基于Scala的，一门新语言对很多固守成规的人的来说，有着不小的心里成本。<br>但还是可以有某些技巧可以减少学习成本，例如，可以直接从官方的例子来学习：</p>
+<p><a href="https://github.com/gatling/gatling-maven-plugin-demo" target="_blank" rel="noopener">gatling-maven-plugin-demo</a></p>
+<p>我选择了和maven相关的例子，这样是为了以后方便和CI服务器集成。<br><img src="/img/2015/gatling3.png" alt="img"></p>
+<p>首页就介绍了如何用maven去运行gatling，从运行入口BasicSimulation.scala 就可以学习基本的用法。</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> computerdatabase</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> io.gatling.core.<span class="type">Predef</span>._</span><br><span class="line"><span class="keyword">import</span> io.gatling.http.<span class="type">Predef</span>._</span><br><span class="line"><span class="keyword">import</span> scala.concurrent.duration._</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BasicSimulation</span> <span class="keyword">extends</span> <span class="title">Simulation</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">val</span> httpConf = http</span><br><span class="line">    .baseURL(<span class="string">"http://computer-database.gatling.io"</span>) <span class="comment">// Here is the root for all relative URLs</span></span><br><span class="line">    .acceptHeader(<span class="string">"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"</span>) <span class="comment">// Here are the common headers</span></span><br><span class="line">    .doNotTrackHeader(<span class="string">"1"</span>)</span><br><span class="line">    .acceptLanguageHeader(<span class="string">"en-US,en;q=0.5"</span>)</span><br><span class="line">    .acceptEncodingHeader(<span class="string">"gzip, deflate"</span>)</span><br><span class="line">    .userAgentHeader(<span class="string">"Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:16.0) Gecko/20100101 Firefox/16.0"</span>)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">val</span> headers_10 = <span class="type">Map</span>(<span class="string">"Content-Type"</span> -&gt; <span class="string">""</span><span class="string">"application/x-www-form-urlencoded"</span><span class="string">""</span>) <span class="comment">// Note the headers specific to a given request</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">val</span> scn = scenario(<span class="string">"Scenario Name"</span>) <span class="comment">// A scenario is a chain of requests and pauses</span></span><br><span class="line">    .exec(http(<span class="string">"request_1"</span>)</span><br><span class="line">      .get(<span class="string">"/"</span>))</span><br><span class="line">    .pause(<span class="number">7</span>) <span class="comment">// Note that Gatling has recorder real time pauses</span></span><br><span class="line">    .exec(http(<span class="string">"request_2"</span>)</span><br><span class="line">      .get(<span class="string">"/computers?f=macbook"</span>))</span><br><span class="line">    .pause(<span class="number">2</span>)</span><br><span class="line">    .exec(http(<span class="string">"request_3"</span>)</span><br><span class="line">      .get(<span class="string">"/computers/6"</span>))</span><br><span class="line">    .pause(<span class="number">3</span>)</span><br><span class="line">    .exec(http(<span class="string">"request_4"</span>)</span><br><span class="line">      .get(<span class="string">"/"</span>))</span><br><span class="line">    .pause(<span class="number">2</span>)</span><br><span class="line">    .exec(http(<span class="string">"request_5"</span>)</span><br><span class="line">      .get(<span class="string">"/computers?p=1"</span>))</span><br><span class="line">    .pause(<span class="number">670</span> milliseconds)</span><br><span class="line">    .exec(http(<span class="string">"request_6"</span>)</span><br><span class="line">      .get(<span class="string">"/computers?p=2"</span>))</span><br><span class="line">    .pause(<span class="number">629</span> milliseconds)</span><br><span class="line">    .exec(http(<span class="string">"request_7"</span>)</span><br><span class="line">      .get(<span class="string">"/computers?p=3"</span>))</span><br><span class="line">    .pause(<span class="number">734</span> milliseconds)</span><br><span class="line">    .exec(http(<span class="string">"request_8"</span>)</span><br><span class="line">      .get(<span class="string">"/computers?p=4"</span>))</span><br><span class="line">    .pause(<span class="number">5</span>)</span><br><span class="line">    .exec(http(<span class="string">"request_9"</span>)</span><br><span class="line">      .get(<span class="string">"/computers/new"</span>))</span><br><span class="line">    .pause(<span class="number">1</span>)</span><br><span class="line">    .exec(http(<span class="string">"request_10"</span>) <span class="comment">// Here's an example of a POST request</span></span><br><span class="line">      .post(<span class="string">"/computers"</span>)</span><br><span class="line">      .headers(headers_10)</span><br><span class="line">      .formParam(<span class="string">""</span><span class="string">"name"</span><span class="string">""</span>, <span class="string">""</span><span class="string">"Beautiful Computer"</span><span class="string">""</span>) <span class="comment">// Note the triple double quotes: used in Scala for protecting a whole chain of characters (no need for backslash)</span></span><br><span class="line">      .formParam(<span class="string">""</span><span class="string">"introduced"</span><span class="string">""</span>, <span class="string">""</span><span class="string">"2012-05-30"</span><span class="string">""</span>)</span><br><span class="line">      .formParam(<span class="string">""</span><span class="string">"discontinued"</span><span class="string">""</span>, <span class="string">""</span><span class="string">""</span><span class="string">""</span>)</span><br><span class="line">      .formParam(<span class="string">""</span><span class="string">"company"</span><span class="string">""</span>, <span class="string">""</span><span class="string">"37"</span><span class="string">""</span>))</span><br><span class="line"></span><br><span class="line">  setUp(scn.inject(atOnceUsers(<span class="number">1</span>)).protocols(httpConf))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个是一个很好的例子，从源码里我们可以轻易知道怎样去测试一个HTTP接口，无论是通过HTTP GET ，还是HTTP POST。  </p>
+<h1 id="进阶使用Gatling"><a href="#进阶使用Gatling" class="headerlink" title="进阶使用Gatling"></a>进阶使用Gatling</h1><p>从官方的文档中，得知Gatling支持读取csv格式的数据，这样进一步的方便我对测试数据的准备，为了测试简单，我采取了HTTP GET的方式。  </p>
+<p>我通过一个csv文件配置测试所需要的的数据：</p>
+<p><img src="/img/2015/gatling4.png" alt="img"></p>
+<p>然后改写测试代码来支持读取csv，这里采取了随即读取的方式：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">val</span> httpConf = http</span><br><span class="line">    .baseURL(<span class="string">"http://computer-database.gatling.io"</span>) <span class="comment">// Here is the root for all relative URLs</span></span><br><span class="line"></span><br><span class="line"> ......</span><br><span class="line"></span><br><span class="line"> <span class="keyword">val</span> records = csv(<span class="string">"api_scenario.csv"</span>, rawSplit = <span class="literal">true</span>).random</span><br><span class="line"></span><br><span class="line">  <span class="keyword">val</span> scn = scenario(<span class="string">"API Performance Test"</span>) <span class="comment">// A scenario is a chain of requests and pauses</span></span><br><span class="line">  <span class="comment">// inject project</span></span><br><span class="line">    .feed(records)</span><br><span class="line"></span><br><span class="line">    .exec(http(<span class="string">"$&#123;scenario&#125;"</span>)</span><br><span class="line">    .get(<span class="string">"$&#123;api&#125;"</span>)</span><br><span class="line">    .check(status.is(<span class="number">200</span>))</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">  <span class="keyword">val</span> runUsers = <span class="type">Integer</span>.getInteger(<span class="string">"users"</span>, <span class="number">1</span>)</span><br><span class="line">  setUp(scn.inject(atOnceUsers(runUsers)).protocols(httpConf))</span><br></pre></td></tr></table></figure>
+<p>baseURL(“<a href="http://xxx&quot;)方法决定的测试的URL，" target="_blank" rel="noopener">http://xxx&quot;)方法决定的测试的URL，</a> records定义测试的数据源。<br>通过feed方法读取数据，exe方法执行，get方法采取HTTP GET方式，check方法检查返回结果（HTTP CODE）  </p>
+<p>变量runUsers则是定义一个外部传入的参数，代表测试的并发数。  </p>
+<h1 id="运行Gatling"><a href="#运行Gatling" class="headerlink" title="运行Gatling"></a>运行Gatling</h1><p>一切就绪之后就可以运行测试了，以Intellij为例：<br><img src="/img/2015/gatling5.png" alt="img"></p>
+<pre><code>gatling:execute -Dgatling.simulationClass=computerdatabase.API_Simulation -X -Dusers=10
+</code></pre><p>gatling:execute 执行测试， 参数-Dgatling.simulationClass指定入口， －X 打开Maven的调试日志，-Dusers用户并发数。</p>
+<p>运行之后日志如下：<br><img src="/img/2015/gatling6.png" alt="img"></p>
+<p>打开结果报表 （../target/gatling/results/api-simulation-xxx/index.html）<br>拉风的报表就出现了！<br><img src="/img/2015/gatling7.png" alt="img"></p>
+<h1 id="CI集成"><a href="#CI集成" class="headerlink" title="CI集成"></a>CI集成</h1><p>由于之前采取了Maven的命令行模式，所以把Gatling集成到Hudson／Jeskin也非常简单。</p>
+<p><img src="/img/2015/gatling8.png" alt="img"></p>
+<h1 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h1><p>通过上面的步骤，一个简单而完整Gatling测试环境就搭建起来。  </p>
+<p>我的结论是， Gatling， 你值得拥有。 ：）</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/09/02/Tech-2015-2015-09-28-FirstTryOfGatling/" data-id="cjf9gd8b9003evzznetufchq1" class="article-share-link">Teilen</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="mobile-Tech-2016-2016-02-15-NoDQLDistilled" class="article article-type-mobile" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/09/02/Tech-2016-2016-02-15-NoDQLDistilled/" class="article-date">
+  <time datetime="2016-09-02T03:00:52.000Z" itemprop="datePublished">2016-09-02</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Tech/">Tech</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/09/02/Tech-2016-2016-02-15-NoDQLDistilled/">NoSQL Distilled</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="NoSQL-精粹"><a href="#NoSQL-精粹" class="headerlink" title="NoSQL 精粹"></a>NoSQL 精粹</h1><p><img src="http://img3.douban.com/lpic/s27174573.jpg" alt="img"><br>Martin Fowler和Pramond（《数据库重构》作者）联合出品的这本书，为了我们如何看待、使用NoSQL数据库，提供了一个很好的起点。  </p>
+<h1 id="为什么要用NoSQL？"><a href="#为什么要用NoSQL？" class="headerlink" title="为什么要用NoSQL？"></a>为什么要用NoSQL？</h1><p>关系型数据库有很多优势，但绝非完美。对开发者来说，最令他们失望的就是：<br>    关系模型和内存中的数据结构存在差异，即 “阻抗失谐”  </p>
+<p>另外，关系型数据库在集群的环境中使用的成本较高，不适用于21世纪的互联网公司。<br>NoSQL作为无模式、非关系数据库而出现，有效的解决以上问题。<br>为关系型数据库做了有益的补充，让混合持久化成为了当今的趋势。  </p>
+<h1 id="数据模型"><a href="#数据模型" class="headerlink" title="数据模型"></a>数据模型</h1><p><img src="/img/2016/NoDQL1.png" alt="img"></p>
+<p>NoSQL数据库的数据模型有2种：面向聚合的数据模型、面向复杂关系的数据模型。<br>键值、文档、列族类型的NoSQL数据库都属于面向聚合的数据模型。<br>而“图”数据库则是一个异类，它比关系型数据库更擅长处理复杂的关系，补充了关系型数据库的另外一个不足之处。   </p>
+<p>它们都是无模式的数据库，可以随意新增字段，然而用户在使用数据时，通常还是要遵循一套隐式模式。  </p>
+<p>面向聚合的数据库对于复杂查询的支持比不上关系型数据库，它通常是用不同的方式重组主聚合的数据，以计算出各种“物化视图”。计算过程一般通过“map－reduce”来实现。</p>
+<h1 id="分布式模型"><a href="#分布式模型" class="headerlink" title="分布式模型"></a>分布式模型</h1><pre><code>在不需要分布数据就能应对时，总应选用“单一服务器”方案。
+</code></pre><p>数据分布的路径有2种：复制（replication）、分片（sharding） 。<br>2者是“正交的” ，可单独使用，也可以结合使用。  </p>
+<p>由简至繁的顺序如下：  </p>
+<ul>
+<li>单一服务器</li>
+<li>分片</li>
+<li>主从复制</li>
+<li>对等复制</li>
+</ul>
+<h2 id="分片"><a href="#分片" class="headerlink" title="分片"></a>分片</h2><p>把数据分部分存放在不同服务器中，以此实现横向扩张，这种技术就叫“分片”。<br>分片同时提高来读取和写入的效率，但也有可能降低数据库的错误恢复能力。</p>
+<p><img src="/img/2016/NoDQL2.png" width="800"></p>
+<h2 id="主从复制"><a href="#主从复制" class="headerlink" title="主从复制"></a>主从复制</h2><p>主持复制通常是经过“投票”的方法来选定一个“主节点”，“主节点”负责写入数据，通过复制的方式把数据同步到“从节点”，“从节点”复制数据的读取。  </p>
+<p>主从复制适合需要频繁读取数据的情况，它增强来读取操作的故障恢复能力。<br>但其缺点是，在数据同步的过程中，容易带来数据的不一致性.  </p>
+<h2 id="对等复制"><a href="#对等复制" class="headerlink" title="对等复制"></a>对等复制</h2><p>对等复制没有“主节点”的概念，所有的节点对等的写入和读取。<br>但它也存在数据的不一致性的问题。</p>
+<h1 id="版本戳"><a href="#版本戳" class="headerlink" title="版本戳"></a>版本戳</h1><p>版本戳可以由计数器、GUID、内容哈希码、时间戳来实现，或者组合其中几种来实现。<br>通过版本戳可以有效的检测并发冲突问题。  </p>
+<h1 id="映射-从简"><a href="#映射-从简" class="headerlink" title="映射-从简"></a>映射-从简</h1><pre><code>map-reduce是一种集群上执行并发计算的模式
+</code></pre><p>“映射”任务从聚合中读取数据，将之缩减为相关键值对。<br>“从简”任务将“映射”任务生成的许多相同关键字的值简化为一个输出值。<br>它们之间可以通过“管道”的方式来组合，通过“物化视图”来存储招的计算结果。  </p>
+<h1 id="键值数据库"><a href="#键值数据库" class="headerlink" title="键值数据库"></a>键值数据库</h1><p>键值数据库（key－value）是一张简单的哈希表，所有数据库访问都通过主键来操作。  </p>
+<p>流行的键值数据库有：Riak，Redis、Memcached等。。  </p>
+<h2 id="适用场合"><a href="#适用场合" class="headerlink" title="适用场合"></a>适用场合</h2><ul>
+<li>session信息</li>
+<li>用户配置信息</li>
+<li>购物车数据</li>
+</ul>
+<h2 id="不适用场合"><a href="#不适用场合" class="headerlink" title="不适用场合"></a>不适用场合</h2><ul>
+<li>数据间关系</li>
+<li>含有多项操作的事务</li>
+<li>查询数据</li>
+<li>操作关键字集合</li>
+</ul>
+<h1 id="文档数据库"><a href="#文档数据库" class="headerlink" title="文档数据库"></a>文档数据库</h1><p>文档数据库以“文档”为主要概念，存储格式可以是XML、JSON、BSON等。  </p>
+<p>流行的文档数据库有： MongoDB、CouchDB等  </p>
+<p>它有一个键值数据库没有的好处： 可以直接查询文档中的数据，不需要先根据关键字获取整个文档。  </p>
+<h2 id="适用场合-1"><a href="#适用场合-1" class="headerlink" title="适用场合"></a>适用场合</h2><ul>
+<li>事件记录</li>
+<li>CMS与Blog</li>
+<li>网站分析与实时分析</li>
+<li>电子商务</li>
+</ul>
+<h2 id="不适用场合-1"><a href="#不适用场合-1" class="headerlink" title="不适用场合"></a>不适用场合</h2><ul>
+<li>包含多项操作的复杂事务</li>
+<li>查询持续变化的聚合结构</li>
+</ul>
+<h1 id="列族数据库"><a href="#列族数据库" class="headerlink" title="列族数据库"></a>列族数据库</h1><p>列族数据库可以存储关键字及其映射值，并且可以把值分成多个列族，让每个列族代表一张数据映射表。  </p>
+<p>流行的列族数据库有： Cassandra、HBase等</p>
+<h2 id="适用场合-2"><a href="#适用场合-2" class="headerlink" title="适用场合"></a>适用场合</h2><ul>
+<li>事件记录</li>
+<li>CMS与Blog</li>
+<li>计数器</li>
+<li>限期使用</li>
+</ul>
+<h2 id="不适用场合-2"><a href="#不适用场合-2" class="headerlink" title="不适用场合"></a>不适用场合</h2><ul>
+<li>查询模式多变的场景</li>
+</ul>
+<h1 id="图数据库"><a href="#图数据库" class="headerlink" title="图数据库"></a>图数据库</h1><p>图数据库可以存放实体及实体间的关系，实体也叫“节点”，它们之间的关系也叫“边”。</p>
+<p>流行的图数据库有：Neo4J、HyperGraphDB 等</p>
+<h2 id="适用场合-3"><a href="#适用场合-3" class="headerlink" title="适用场合"></a>适用场合</h2><ul>
+<li>互联数据</li>
+<li>基于位置的服务</li>
+<li>推荐引擎</li>
+</ul>
+<h2 id="不适用场合-3"><a href="#不适用场合-3" class="headerlink" title="不适用场合"></a>不适用场合</h2><ul>
+<li>属性多变的场景</li>
+</ul>
+<h1 id="混合持久化"><a href="#混合持久化" class="headerlink" title="混合持久化"></a>混合持久化</h1><pre><code>不同的数据库用来解决不同的问题，只用一种数据库引擎的时代已经过去。
+</code></pre><p><img src="/img/2016/NoDQL3.png" width="800"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/09/02/Tech-2016-2016-02-15-NoDQLDistilled/" data-id="cjf9gd8ah002wvzznpnhqrili" class="article-share-link">Teilen</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="mobile-Tech-2016-2016-09-19-SpringMVC" class="article article-type-mobile" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/09/02/Tech-2016-2016-09-19-SpringMVC/" class="article-date">
+  <time datetime="2016-09-02T02:55:04.000Z" itemprop="datePublished">2016-09-02</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Tech/">Tech</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/09/02/Tech-2016-2016-09-19-SpringMVC/">Spring MVC</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Spring-MVC"><a href="#Spring-MVC" class="headerlink" title="Spring MVC"></a>Spring MVC</h1><p>MVC模型有很多种实现，Spring MVC是其中较经典的一种。</p>
+<h1 id="Spring-MVC-is-a-Servlet"><a href="#Spring-MVC-is-a-Servlet" class="headerlink" title="Spring MVC is a Servlet"></a>Spring MVC is a Servlet</h1><p>本质上，Spring MVC是一个Servlet，它需要一个Servlet容器（Tomcat、WAS等）。</p>
+<p><img src="/img/2016/SpringMVC-Servlet.png" width="800"></p>
+<p>它提供了3个层次的Servlet：</p>
+<ul>
+<li><p>HttpServletBean<br>直接继承Java的HttpServlet，将Servlet中配置的参数设置到对应的属性中。</p>
+</li>
+<li><p>FrameworkServlet<br>初始化了WebApplication－Context和对应的组件。</p>
+</li>
+<li><p>DispatherServlet<br>Spring MVC最核心的类，入口方法是doService，但具体的处理在doDispath里实现，<br>doService在调用doDispatch的前后做了相应的请求处理。</p>
+</li>
+</ul>
+<h2 id="doDispatch"><a href="#doDispatch" class="headerlink" title="doDispatch"></a>doDispatch</h2><p>doDispatch的主要任务有4个：</p>
+<ol>
+<li>根据request找到Hanlder</li>
+<li>根据Handler找到对应的HanlderAdapter</li>
+<li>用HanlderAdapter处理Handler</li>
+<li>调用processDispathResult方法处理结果，并找到View渲染给用户。</li>
+</ol>
+<h1 id="A-Http-Request-life-cycle"><a href="#A-Http-Request-life-cycle" class="headerlink" title="A Http Request life cycle"></a>A Http Request life cycle</h1><p>一个Http请求到MVC的处理的主要步骤如下图：</p>
+<p><img src="/img/2016/SpringMVC-Dispatch.png" width="800"></p>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ul>
+<li>《看透Spring MVC》  </li>
+</ul>
+<p><img src="https://img1.doubanio.com/lpic/s28824099.jpg" alt="img"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/09/02/Tech-2016-2016-09-19-SpringMVC/" data-id="cjf9gd8aq0034vzzns49vptpo" class="article-share-link">Teilen</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+
+
+  <nav id="page-nav">
+    
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/">weiter &raquo;</a>
+  </nav>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Kategorien</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Art/">Art</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Other/">Other</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Tao/">Tao</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Tech/">Tech</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Buddha/">Buddha</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DDD/">DDD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/IDDD/">IDDD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Philosophy/">Philosophy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TroubleShoot/">TroubleShoot</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Buddha/" style="font-size: 10px;">Buddha</a> <a href="/tags/DDD/" style="font-size: 20px;">DDD</a> <a href="/tags/IDDD/" style="font-size: 15px;">IDDD</a> <a href="/tags/Philosophy/" style="font-size: 10px;">Philosophy</a> <a href="/tags/TroubleShoot/" style="font-size: 10px;">TroubleShoot</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archiv</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">February 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">November 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">August 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">July 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">June 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">April 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">March 2015</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">letzter Beitrag</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/03/27/Tech-2014-2014-09-02-BenefitOfExtractMethod/">Benefit of Extract Method</a>
+          </li>
+        
+          <li>
+            <a href="/2018/02/28/Tech-2018-2018-02-27-One-Issue-Cause-By-Id/">One Issue Cause By Id</a>
+          </li>
+        
+          <li>
+            <a href="/2016/10/20/Tech-2016-2016-11-09-resinWithJavaEE8/">Resin 3 With JavaEE8</a>
+          </li>
+        
+          <li>
+            <a href="/2016/09/13/Tech-2016-2016-09-13-JavaConcurrency/">Java Concurrency</a>
+          </li>
+        
+          <li>
+            <a href="/2016/09/12/Tech-2016-2016-09-12-JavaMemModel/">Java Memory Model</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 Antinomy Yang<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>Java Memory Model | Anti</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Java 内存模型Java不像C＋＋由程序员直接管理内存，而是由虚拟机内存管理机制管理。 以JDK1.7为例子，内存模型如下： 内存模型  程序计数器 （Program Counter Register） Java虚拟机栈 （Java Virtual Machine Stacks） 本地方法栈 （Native Method Stack） Java堆 （Java Heap） 方法区 （Method">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java Memory Model">
+<meta property="og:url" content="http://yoursite.com/2016/09/12/Tech-2016-2016-09-12-JavaMemModel/index.html">
+<meta property="og:site_name" content="Anti">
+<meta property="og:description" content="Java 内存模型Java不像C＋＋由程序员直接管理内存，而是由虚拟机内存管理机制管理。 以JDK1.7为例子，内存模型如下： 内存模型  程序计数器 （Program Counter Register） Java虚拟机栈 （Java Virtual Machine Stacks） 本地方法栈 （Native Method Stack） Java堆 （Java Heap） 方法区 （Method">
+<meta property="og:image" content="http://yoursite.com/img/2016/JMM.png">
+<meta property="og:image" content="http://cdn1.infoqstatic.com/statics_s2_20160914-0333/resource/news/2016/09/APM-jClarity-jvm-heap-oldgen/zh/resources/2.png">
+<meta property="og:image" content="http://yoursite.com/img/2016/Java7MM.png">
+<meta property="og:image" content="http://yoursite.com/img/2016/Java8MM.png">
+<meta property="og:image" content="https://img3.doubanio.com/lpic/s27458236.jpg">
+<meta property="og:updated_time" content="2016-09-19T06:26:28.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java Memory Model">
+<meta name="twitter:description" content="Java 内存模型Java不像C＋＋由程序员直接管理内存，而是由虚拟机内存管理机制管理。 以JDK1.7为例子，内存模型如下： 内存模型  程序计数器 （Program Counter Register） Java虚拟机栈 （Java Virtual Machine Stacks） 本地方法栈 （Native Method Stack） Java堆 （Java Heap） 方法区 （Method">
+<meta name="twitter:image" content="http://yoursite.com/img/2016/JMM.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Anti" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Anti</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Suche"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="mobile-Tech-2016-2016-09-12-JavaMemModel" class="article article-type-mobile" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/09/12/Tech-2016-2016-09-12-JavaMemModel/" class="article-date">
+  <time datetime="2016-09-12T10:23:16.000Z" itemprop="datePublished">2016-09-12</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Tech/">Tech</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Java Memory Model
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Java-内存模型"><a href="#Java-内存模型" class="headerlink" title="Java 内存模型"></a>Java 内存模型</h1><p>Java不像C＋＋由程序员直接管理内存，而是由虚拟机内存管理机制管理。</p>
+<p>以JDK1.7为例子，内存模型如下：</p>
+<h1 id="内存模型"><a href="#内存模型" class="headerlink" title="内存模型"></a>内存模型</h1><p><img src="/img/2016/JMM.png" width="600"></p>
+<ul>
+<li>程序计数器 （Program Counter Register）</li>
+<li>Java虚拟机栈 （Java Virtual Machine Stacks）</li>
+<li>本地方法栈 （Native Method Stack）</li>
+<li>Java堆 （Java Heap）</li>
+<li>方法区 （Method Area）</li>
+<li>运行时常量池 （Runtime Constant Pool）</li>
+<li>直接内存 （Direct Memory）</li>
+</ul>
+<h2 id="程序计数器-（Program-Counter-Register）"><a href="#程序计数器-（Program-Counter-Register）" class="headerlink" title="程序计数器 （Program Counter Register）"></a>程序计数器 （Program Counter Register）</h2><p>程序计数器是一块较小的线程私有的内存空间，用了记录正在执行的虚拟机字节码指令的地址。<br>通过改变这个计数器的值来选取下一条字节码指令，分支、循环、跳转、异常处理、线程恢复等功能都需要依靠它来实现。</p>
+<p>执行Native方法的时候，其值为空（Undefined）。</p>
+<p>此内存区域是虚拟机规范唯一没有规定任何OutOfMemoryError的区域。</p>
+<h2 id="Java虚拟机栈-（Java-Virtual-Machine-Stacks）"><a href="#Java虚拟机栈-（Java-Virtual-Machine-Stacks）" class="headerlink" title="Java虚拟机栈 （Java Virtual Machine Stacks）"></a>Java虚拟机栈 （Java Virtual Machine Stacks）</h2><p>Java虚拟机栈也是线程私有的内存空间，它的生命周期和线程一样。</p>
+<p>它是描述Java方法执行的内存模型：</p>
+<pre><code>每个方法在执行的同时都会创建一个栈桢（Stack Frame），用于存储局部变量表、操作数栈、动态链接、方法出口等信息。
+</code></pre><p>每个方法从调用到结束，就对应一个栈桢在虚拟机栈中入栈到出栈的过程。</p>
+<h2 id="本地方法栈-（Native-Method-Stack）"><a href="#本地方法栈-（Native-Method-Stack）" class="headerlink" title="本地方法栈 （Native Method Stack）"></a>本地方法栈 （Native Method Stack）</h2><p>本地方法栈 （Native Method Stack）与Java虚拟机栈的作用非常相似，其区别是：</p>
+<pre><code>虚拟机栈为Java方法服务，本地方法栈为虚拟机用到的Native方法服务。
+</code></pre><h2 id="Java堆-（Java-Heap）"><a href="#Java堆-（Java-Heap）" class="headerlink" title="Java堆 （Java Heap）"></a>Java堆 （Java Heap）</h2><p>Java堆是所有线程共享的内存区域，是最大的一块。</p>
+<p>其唯一目的就是存放对象实例，也是GC管理的主要区域。</p>
+<p>从内存回收的角度，还可以细分为： 新生代（Young Generation）和老年代（Old Generation）等。</p>
+<p><img src="http://cdn1.infoqstatic.com/statics_s2_20160914-0333/resource/news/2016/09/APM-jClarity-jvm-heap-oldgen/zh/resources/2.png" alt="img"></p>
+<p>年轻代为创建的短期对象，失效之后很快会被垃圾回收。该区又被划分为Eden和两个Survivor区域。</p>
+<p>老年代存放的多数为存活时间较长的对象。</p>
+<p>垃圾回收GC分为两种Minor GC、Full GC；</p>
+<p>Minor GC发生频繁，但是仅针对年轻代。</p>
+<h3 id="Full-GC-触发条件"><a href="#Full-GC-触发条件" class="headerlink" title="Full GC 触发条件"></a>Full GC 触发条件</h3><ul>
+<li>调用System.gc()</li>
+<li>老年代空间不足</li>
+<li>永久代空间不足</li>
+<li>空间分配担保失败</li>
+<li>Cocurrent mode failure</li>
+</ul>
+<h2 id="方法区-（Method-Area）"><a href="#方法区-（Method-Area）" class="headerlink" title="方法区 （Method Area）"></a>方法区 （Method Area）</h2><p>方法区用于存储已被虚拟机加载的类信息、常量、静态变量、即时编译器编译后的代码等数据。</p>
+<p>虽然和Java堆一样是各个线程共享的内存区域，却有一个别名 Non－Heap （非堆）</p>
+<p>在HotSpot虚拟机上“方法区”被更多人称为“永久代” （Permanent Generation），但对其它虚拟机并不存在这样的概念。</p>
+<p><img src="/img/2016/Java7MM.png" width="800"></p>
+<p>而且在JDK8里，永久代也被Metaspace所替代，位置也移到native memory里。</p>
+<p>这样做的好处在于：简化GC的算法，full gc的时候更高效率。</p>
+<p><img src="/img/2016/Java8MM.png" width="800"></p>
+<h2 id="运行时常量池-（Runtime-Constant-Pool）"><a href="#运行时常量池-（Runtime-Constant-Pool）" class="headerlink" title="运行时常量池 （Runtime Constant Pool）"></a>运行时常量池 （Runtime Constant Pool）</h2><p>运行时常量池 是方法区的一部分，用于存储编译期生成的各种字面量和符号引用，在类加载后进入方法区的运行时常量池中。</p>
+<h2 id="直接内存-（Direct-Memory）"><a href="#直接内存-（Direct-Memory）" class="headerlink" title="直接内存 （Direct Memory）"></a>直接内存 （Direct Memory）</h2><p>直接内存不是虚拟机运行时数据区的一部分，也不是Java虚拟机规范中定义的内存区域。<br>它属于堆外内存，受到本机内存大小、寻址空间的限制。</p>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ul>
+<li>《深入浅出Java虚拟机》  </li>
+</ul>
+<p><img src="https://img3.doubanio.com/lpic/s27458236.jpg" alt="img"></p>
+<ul>
+<li><a href="http://www.infoq.com/cn/news/2016/09/APM-jClarity-jvm-heap-oldgen" target="_blank" rel="noopener">JVM堆内存监测的一种方式，性能调优依旧任重道远</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/09/12/Tech-2016-2016-09-12-JavaMemModel/" data-id="cjf9gd8al0030vzzn2vv0o8nl" class="article-share-link">Teilen</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/09/13/Tech-2016-2016-09-13-JavaConcurrency/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Neuer</strong>
+      <div class="article-nav-title">
+        
+          Java Concurrency
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/09/09/Tech-2016-2016-09-09-jvm-classloader/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Älter</strong>
+      <div class="article-nav-title">JVM Class Loader</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Kategorien</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Art/">Art</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Other/">Other</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Tao/">Tao</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Tech/">Tech</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Buddha/">Buddha</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DDD/">DDD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/IDDD/">IDDD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Philosophy/">Philosophy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TroubleShoot/">TroubleShoot</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Buddha/" style="font-size: 10px;">Buddha</a> <a href="/tags/DDD/" style="font-size: 20px;">DDD</a> <a href="/tags/IDDD/" style="font-size: 15px;">IDDD</a> <a href="/tags/Philosophy/" style="font-size: 10px;">Philosophy</a> <a href="/tags/TroubleShoot/" style="font-size: 10px;">TroubleShoot</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archiv</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">February 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">November 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">August 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">July 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">June 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">April 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">March 2015</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">letzter Beitrag</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/03/27/Tech-2014-2014-09-02-BenefitOfExtractMethod/">Benefit of Extract Method</a>
+          </li>
+        
+          <li>
+            <a href="/2018/02/28/Tech-2018-2018-02-27-One-Issue-Cause-By-Id/">One Issue Cause By Id</a>
+          </li>
+        
+          <li>
+            <a href="/2016/10/20/Tech-2016-2016-11-09-resinWithJavaEE8/">Resin 3 With JavaEE8</a>
+          </li>
+        
+          <li>
+            <a href="/2016/09/13/Tech-2016-2016-09-13-JavaConcurrency/">Java Concurrency</a>
+          </li>
+        
+          <li>
+            <a href="/2016/09/12/Tech-2016-2016-09-12-JavaMemModel/">Java Memory Model</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 Antinomy Yang<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>Benefit of Extract Method | Anti</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="提炼方法的好处？  在最近的一次Code Review里，我和同事在一个基本的问题上产生了分歧。三言两语很难说的清楚，我决定尝试把它写清楚。   分歧的起因在于我把以下的这段代码：  12345678// some methodmemset( pData-&amp;gt;field1 , &apos; &apos; ,sizeof(pData-&amp;gt;field1));memset( pData-&amp;gt;field2 , &apos;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Benefit of Extract Method">
+<meta property="og:url" content="http://yoursite.com/2018/03/27/Tech-2014-2014-09-02-BenefitOfExtractMethod/index.html">
+<meta property="og:site_name" content="Anti">
+<meta property="og:description" content="提炼方法的好处？  在最近的一次Code Review里，我和同事在一个基本的问题上产生了分歧。三言两语很难说的清楚，我决定尝试把它写清楚。   分歧的起因在于我把以下的这段代码：  12345678// some methodmemset( pData-&amp;gt;field1 , &apos; &apos; ,sizeof(pData-&amp;gt;field1));memset( pData-&amp;gt;field2 , &apos;">
+<meta property="og:updated_time" content="2018-03-27T09:45:12.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Benefit of Extract Method">
+<meta name="twitter:description" content="提炼方法的好处？  在最近的一次Code Review里，我和同事在一个基本的问题上产生了分歧。三言两语很难说的清楚，我决定尝试把它写清楚。   分歧的起因在于我把以下的这段代码：  12345678// some methodmemset( pData-&amp;gt;field1 , &apos; &apos; ,sizeof(pData-&amp;gt;field1));memset( pData-&amp;gt;field2 , &apos;">
+  
+    <link rel="alternate" href="/atom.xml" title="Anti" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Anti</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Suche"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="mobile-Tech-2014-2014-09-02-BenefitOfExtractMethod" class="article article-type-mobile" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/03/27/Tech-2014-2014-09-02-BenefitOfExtractMethod/" class="article-date">
+  <time datetime="2018-03-27T09:45:12.000Z" itemprop="datePublished">2018-03-27</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Tech/">Tech</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Benefit of Extract Method
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="提炼方法的好处？"><a href="#提炼方法的好处？" class="headerlink" title="提炼方法的好处？"></a>提炼方法的好处？</h1><p>  在最近的一次Code Review里，我和同事在一个基本的问题上产生了分歧。三言两语很难说的清楚，我决定尝试把它写清楚。</p>
+<p>  分歧的起因在于我把以下的这段代码：</p>
+<hr>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// some method</span></span><br><span class="line"><span class="built_in">memset</span>( pData-&gt;field1 , <span class="string">' '</span> ,<span class="keyword">sizeof</span>(pData-&gt;field1));</span><br><span class="line"><span class="built_in">memset</span>( pData-&gt;field2 , <span class="string">' '</span> ,<span class="keyword">sizeof</span>(pData-&gt;field2));</span><br><span class="line"><span class="built_in">memset</span>( pData-&gt;field3 , <span class="string">' '</span> ,<span class="keyword">sizeof</span>(pData-&gt;field3));</span><br><span class="line"><span class="built_in">memset</span>( pData-&gt;field4 , <span class="string">' '</span> ,<span class="keyword">sizeof</span>(pData-&gt;field4));</span><br><span class="line"><span class="built_in">memset</span>( pData-&gt;field5 , <span class="string">' '</span> ,<span class="keyword">sizeof</span>(pData-&gt;field5));</span><br><span class="line"><span class="built_in">memset</span>( pData-&gt;field6 , <span class="string">' '</span> ,<span class="keyword">sizeof</span>(pData-&gt;field6));</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>  写成:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Init_String</span><span class="params">(CHAR *str)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="built_in">memset</span>(str ,<span class="string">' '</span>,<span class="keyword">sizeof</span>(str))</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// some method</span></span><br><span class="line">Init_String(pData-&gt;field1);</span><br><span class="line">Init_String(pData-&gt;field2);</span><br><span class="line">Init_String(pData-&gt;field3);</span><br><span class="line">Init_String(pData-&gt;field4);</span><br><span class="line">Init_String(pData-&gt;field5);</span><br><span class="line">Init_String(pData-&gt;field6);</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="同事对此有以下几点疑问"><a href="#同事对此有以下几点疑问" class="headerlink" title="同事对此有以下几点疑问:"></a>同事对此有以下几点疑问:</h2><pre><code>1. 有什么好处?
+2. 多了个方法，性能会变低。
+3. 与过去的风格不同，增加学习曲线。
+</code></pre><hr>
+<h2 id="动机"><a href="#动机" class="headerlink" title="动机"></a>动机</h2><p>在回答所有的问题之前,我先说下我的动机,在原先的方法里</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">memset</span>( pData-&gt;field1 , <span class="string">' '</span> ,<span class="keyword">sizeof</span>(pData-&gt;field1));</span><br></pre></td></tr></table></figure>
+<p>看来好简单的一句程序里，出现了2次”pData-&gt;field1”。<br>这里已经出现了重复的臭味道，随着这样的写法数量增多，这段代码就越来越臭了。</p>
+<p>有代码洁癖的我是觉得难以忍受的。</p>
+<p>根据DRY原则（Dont Repeat Yourself）,我把代码里不变的部分用Extract Method的手法重构到一个方法里。</p>
+<p>方法名叫Init_String（），我简单的把一个内存的操作的工作封装到‘初始化字符串’的方法里。</p>
+<p>下次我再看到这里我就只需要知道它能帮我初始化‘字符串’就行，而不需要分神去理会它是如何的实现。</p>
+<p>然后，我再来一一解答所有问题：</p>
+<hr>
+<h2 id="有什么好处"><a href="#有什么好处" class="headerlink" title="有什么好处?"></a>有什么好处?</h2><pre><code>1. 符合DRY原则 (一次且仅一次)
+   去除重复的代码,消除坏味道.
+2. 符合OCP原则 (开闭原则）
+   拆分不变与变化的代码，对于扩展是开放的，但是对于修改是封闭的.
+3. 更整洁的代码 (Clean Code)
+</code></pre><hr>
+<h2 id="多了个方法，性能会变低"><a href="#多了个方法，性能会变低" class="headerlink" title="多了个方法，性能会变低?"></a>多了个方法，性能会变低?</h2><p>多了一个新方法,每次memset时就call 多次 Init_String（）.<br>看上去是会多耗点性能,但是新的method跟原来的代码是在同一个文件里的.<br>从内存的角度,其内存地址也应该相近,在数量有限的call里,我认为性能是人感受不出来的.<br>当然要更深入讨论,可以去了解C函数的调用机制.</p>
+<hr>
+<h2 id="与过去的风格不同，增加学习曲线。"><a href="#与过去的风格不同，增加学习曲线。" class="headerlink" title="与过去的风格不同，增加学习曲线。"></a>与过去的风格不同，增加学习曲线。</h2><p>的确,这里是个问题。<br>例如100个文件里就1个文件是这种写法，风格不统一会对新人造成一点点阅读困难。</p>
+<p>我们当然做不到一夜之间就改变所有文件，也没有这个必要。<br>这不应该成为阻止我们改进的绊脚石。<br>我一直认为改进应该是增量的，每一次随着需求变化可以适当在满足需求的同时，改善现有的代码。</p>
+<p>重构是有成本的，但也是有回报的。我觉得值得投资。</p>
+<hr>
+<h2 id="Extract-Method"><a href="#Extract-Method" class="headerlink" title="Extract Method"></a>Extract Method</h2><p>最后再啰嗦下什么是Extract Method （提炼函数）.</p>
+<p>Extract Method （提炼函数）是最常用的重构手法之一。当看见一个过长的函数或者一段需要注释才能让人理解用途的代码，就应该将这段代码放进一个独立函数中。</p>
+<p>简短而命名良好的函数的好处：首先，如果每个函数的粒度都很小，那么函数被复用的机会就更大；其次，这会使高层函数读起来就想一系列注释；再次，如果函数都是细粒度，那么函数的覆写也会更容易些。</p>
+<p><a href="http://msdn.microsoft.com/en-us/library/0s21cwxk.aspx" target="_blank" rel="noopener">Further Read</a></p>
+<hr>
+<h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><p><a href="http://www.cplusplus.com/reference/cstring/memset/" target="_blank" rel="noopener">memset</a></p>
+<p><a href="http://zh.wikipedia.org/wiki/%E4%B8%80%E6%AC%A1%E4%B8%94%E4%BB%85%E4%B8%80%E6%AC%A1" target="_blank" rel="noopener">一次且仅一次</a></p>
+<p><a href="http://zh.wikipedia.org/wiki/%E5%BC%80%E9%97%AD%E5%8E%9F%E5%88%99" target="_blank" rel="noopener">开闭原则</a></p>
+<p><a href="http://zh.wikipedia.org/wiki/%E4%BB%A3%E7%A0%81%E9%87%8D%E6%9E%84" target="_blank" rel="noopener">代码重构</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2018/03/27/Tech-2014-2014-09-02-BenefitOfExtractMethod/" data-id="cjf9h6oje000001zn0fo3n0ng" class="article-share-link">Teilen</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2018/02/28/Tech-2018-2018-02-27-One-Issue-Cause-By-Id/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Älter</strong>
+      <div class="article-nav-title">One Issue Cause By Id</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Kategorien</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Art/">Art</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Other/">Other</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Tao/">Tao</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Tech/">Tech</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Buddha/">Buddha</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DDD/">DDD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/IDDD/">IDDD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Philosophy/">Philosophy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TroubleShoot/">TroubleShoot</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Buddha/" style="font-size: 10px;">Buddha</a> <a href="/tags/DDD/" style="font-size: 20px;">DDD</a> <a href="/tags/IDDD/" style="font-size: 15px;">IDDD</a> <a href="/tags/Philosophy/" style="font-size: 10px;">Philosophy</a> <a href="/tags/TroubleShoot/" style="font-size: 10px;">TroubleShoot</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archiv</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">February 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">November 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">August 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">July 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">June 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">April 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">March 2015</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">letzter Beitrag</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/03/27/Tech-2014-2014-09-02-BenefitOfExtractMethod/">Benefit of Extract Method</a>
+          </li>
+        
+          <li>
+            <a href="/2018/02/28/Tech-2018-2018-02-27-One-Issue-Cause-By-Id/">One Issue Cause By Id</a>
+          </li>
+        
+          <li>
+            <a href="/2016/10/20/Tech-2016-2016-11-09-resinWithJavaEE8/">Resin 3 With JavaEE8</a>
+          </li>
+        
+          <li>
+            <a href="/2016/09/13/Tech-2016-2016-09-13-JavaConcurrency/">Java Concurrency</a>
+          </li>
+        
+          <li>
+            <a href="/2016/09/12/Tech-2016-2016-09-12-JavaMemModel/">Java Memory Model</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 Antinomy Yang<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>
