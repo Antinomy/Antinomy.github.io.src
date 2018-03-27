@@ -73,7 +73,7 @@ pagination_dir: page
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: landscape
+theme: next
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
@@ -82,3 +82,9 @@ deploy:
   repo: https://github.com/Antinomy/Antinomy.github.io
   branch: master
   message: update
+
+search:
+  path: search.xml
+  field: post
+  format: html
+  limit: 10000

@@ -8,6 +8,10 @@ menu:
   Other: /categories/Other/
   Me: /about
 rss: /atom.xml
+# Local search
+local_search:
+  enable: true
+
 
 # Content
 excerpt_link: Read More
@@ -40,3 +44,4 @@ twitter:
 google_plus:
 fb_admins:
 fb_app_id:
+
