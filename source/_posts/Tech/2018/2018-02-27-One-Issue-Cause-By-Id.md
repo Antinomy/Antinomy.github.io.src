@@ -2,6 +2,7 @@
 layout: mobile
 title:  One Issue Cause By Id
 category: Tech
+date: 2018-02-27
 ---
 
 一个ID引起的血案

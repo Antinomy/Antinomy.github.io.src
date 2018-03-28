@@ -2,6 +2,7 @@
 layout: mobile
 title: Benefit of Extract Method
 category: Tech
+date: 2014-09-02
 ---
 
 提炼方法的好处？
