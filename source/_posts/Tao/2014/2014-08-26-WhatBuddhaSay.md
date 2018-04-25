@@ -3,6 +3,7 @@ layout: mobile
 title: WhatBuddhaSay?
 category: Tao
 tag: Buddha
+date: 2014-08-26
 ---
 
 《佛祖都说了些什么》

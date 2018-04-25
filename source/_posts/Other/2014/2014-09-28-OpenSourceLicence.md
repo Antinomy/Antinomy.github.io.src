@@ -2,6 +2,7 @@
 layout: mobile
 title: Open Source Licence
 category: Other
+date: 2014-09-28
 ---
 
 开源许可证

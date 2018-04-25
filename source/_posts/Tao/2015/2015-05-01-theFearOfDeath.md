@@ -2,6 +2,7 @@
 layout: mobile
 title:  The Fear of Death
 category:  Tao
+date: 2015-05-01
 ---
 
 死亡的恐惧 

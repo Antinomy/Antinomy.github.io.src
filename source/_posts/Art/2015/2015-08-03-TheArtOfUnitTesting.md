@@ -2,6 +2,7 @@
 layout: mobile
 title:  The Art of Unit Testing
 category: Art
+date: 2015-08-03
 ---
 
 单元测试的艺术

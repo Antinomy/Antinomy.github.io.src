@@ -2,6 +2,7 @@
 layout: mobile
 title:  Spring MVC
 category: Tech
+date: 2016-09-19
 ---
 
 Spring MVC

@@ -2,6 +2,7 @@
 layout: mobile
 title:  Resin 3 With JavaEE8
 category: Tech
+date: 2016-11-09
 ---
 
 Resin 3 With JavaEE 8

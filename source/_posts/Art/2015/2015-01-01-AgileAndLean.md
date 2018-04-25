@@ -2,6 +2,7 @@
 layout: mobile
 title: Agile and Lean
 category: Art
+date: 2015-01-01
 ---
 
 敏捷与精益

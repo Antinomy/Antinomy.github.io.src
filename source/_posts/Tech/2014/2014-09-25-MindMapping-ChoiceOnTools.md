@@ -2,6 +2,7 @@
 layout: mobile
 title: MindMapping - Choice on Tools
 category: Tech
+date: 2014-09-25
 ---
 
 MindMapping - 工具的选择

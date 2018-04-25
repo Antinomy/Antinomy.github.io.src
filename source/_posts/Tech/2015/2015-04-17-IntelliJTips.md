@@ -2,6 +2,7 @@
 layout: mobile
 title:  IntelliJ Tips
 category: Tech
+date: 2015-04-17
 ---
 
 IntelliJ Tips

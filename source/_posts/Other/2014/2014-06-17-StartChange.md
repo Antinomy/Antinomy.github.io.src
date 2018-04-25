@@ -2,6 +2,7 @@
 layout: mobile
 title: Start Change
 category: Other
+date: 2014-06-17
 ---
 
 Start Change

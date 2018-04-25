@@ -2,6 +2,7 @@
 layout: mobile
 title: Issues On Upgrade Jekyll-2.2.0
 category: Tech
+date: 2014-09-03
 ---
 
 Jekyll-2.2.0 的坑

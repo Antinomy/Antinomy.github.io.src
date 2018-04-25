@@ -2,6 +2,7 @@
 layout: mobile
 title:  First Try of Gatling
 category: Tech
+date: 2015-09-28
 ---
 
 次时代压力测试工具：Gatling初体验

@@ -2,6 +2,7 @@
 layout: mobile
 title:  Richardson Maturity Model
 category: Art
+date: 2015-07-03
 ---
 
 Richardson Restful成熟度模型

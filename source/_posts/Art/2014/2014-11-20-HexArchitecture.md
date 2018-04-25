@@ -2,6 +2,7 @@
 layout: mobile
 title: Hex Architecture
 category: Art
+date: 2014-11-20
 ---
 
 六边形架构

@@ -2,6 +2,7 @@
 layout: mobile
 title: The Little Mocker
 category: Art
+date: 2014-10-14
 ---
 
 The Little Mocker

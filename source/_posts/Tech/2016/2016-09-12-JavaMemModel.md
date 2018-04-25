@@ -2,6 +2,7 @@
 layout: mobile
 title:  Java Memory Model
 category: Tech
+date: 2016-09-12
 ---
 
 Java 内存模型

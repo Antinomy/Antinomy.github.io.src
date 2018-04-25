@@ -2,6 +2,7 @@
 layout: mobile
 title:  Speak like TED
 category: Other
+date: 2015-08-20
 ---
 
 像TED一样演讲

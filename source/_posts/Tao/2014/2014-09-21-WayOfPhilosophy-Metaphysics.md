@@ -3,6 +3,7 @@ layout: mobile
 title: Way of Philosophy - Metaphysics
 category: Tao
 tag: Philosophy
+date: 2014-09-21
 ---
 
 哲学之路 : 形而上学

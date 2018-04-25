@@ -3,6 +3,7 @@ layout: mobile
 title: Weird Issue - Line NotFound
 category: Art
 tag: TroubleShoot
+date: 2014-09-18
 ---
 
 疑难杂症 : 找不到的线

@@ -2,6 +2,7 @@
 layout: mobile
 title:  Beck Design Rules
 category: Art
+date: 2015-05-17
 ---
 
 Beck Design Rules （Beck设计规则 A生译）

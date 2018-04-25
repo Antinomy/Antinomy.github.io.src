@@ -2,6 +2,7 @@
 layout: mobile
 title: Bootstrap - Way Of Responsive Web Design
 category: Tech
+date: 2014-09-06
 ---
 
 Bootstrap - 响应式Web设计之道

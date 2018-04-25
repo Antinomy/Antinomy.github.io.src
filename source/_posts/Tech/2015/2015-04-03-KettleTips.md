@@ -2,6 +2,7 @@
 layout: mobile
 title: Kettle Tips
 category: Tech
+date: 2015-04-03
 ---
 
 Kettle Tips
