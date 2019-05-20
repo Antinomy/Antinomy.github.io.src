@@ -1,6 +1,6 @@
 ---
 layout: mobile
-title: 下一代的微服务
+title: 下一代的微服务架构: Service Mesh
 category: Tech
 date: 2019-05-17
 ---
@@ -30,7 +30,7 @@ SpringCloud和Dubbo一样,都属于传统基于SDK的侵入式开发框架.
 
 运气不好遇到非Java技术栈的项目,改造的成本就更让人难以接受了!
 
-直到我听说了Service Mesh,事情才有了新的方向...
+直到我听说了Service Mesh,事情才有了新的转机...
 
 # 非侵入式开发框架
 
