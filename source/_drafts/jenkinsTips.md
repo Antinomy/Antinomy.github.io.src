@@ -53,8 +53,27 @@ maven插件配置也很简单, Goals里写的都是maven本身的命令.
 
 以常见的tomcat为例,一般会在对应的服务器上创建几个文件夹和编写几个shell脚本.
 
+SSH Server Name: 对应的Linux服务器名,具体ip和账号都在Jenkins的管理后台配置
+Source files : 为Jenkins本地workspace的的文件,按照maven的结构,构建好的二进制包位于target目录之下.
+Remove prefix : 去掉本地路径前缀
+Remote directory : 对应目标服务器的相对路径,其实目录是配置好的账号默认登陆目录.
+Exec command :当二进制包发送完毕之后需要之下的命令,部署的具体步骤在这里执行.
+
+部署的步骤包括:
+1. 停掉tomcat
+2. 备份当前的二进制包
+3. 更新最新的二进制包
+4. 启动tomcat
 
 
+至此一个部署流程就完毕了,部署的脚本因具体应用而异,如有中间件,需要在脚本做对应控制.
+
+# 通过定时任务完成CI
+
+![img](/img/2020/Jenkins-5.png)
+
+通过定时任务和团队约定,可以在每一天的约定时间定时进行构建,便可完成日常的CI.
+定时的规则参考Linux的cronjob.
 
 
 
