@@ -56,7 +56,7 @@ maven插件配置也很简单, Goals里写的都是maven本身的命令.
 SSH Server Name: 对应的Linux服务器名,具体ip和账号都在Jenkins的管理后台配置
 Source files : 为Jenkins本地workspace的的文件,按照maven的结构,构建好的二进制包位于target目录之下.
 Remove prefix : 去掉本地路径前缀
-Remote directory : 对应目标服务器的相对路径,其实目录是配置好的账号默认登陆目录.
+Remote directory : 对应目标服务器的相对路径,起始目录是配置好的账号默认登陆目录.
 Exec command :当二进制包发送完毕之后需要之下的命令,部署的具体步骤在这里执行.
 
 部署的步骤包括:
