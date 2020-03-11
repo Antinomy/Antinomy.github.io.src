@@ -77,7 +77,7 @@ Pipeline工程不同UI工程,只能新创建的时候选择.
                      failOnError: true,
                      publishers: [
                          sshPublisherDesc(
-                         configName: "yourServerConfig",
+                         configName: "${SERVER_CONFIG}",
                          verbose: true,
                          transfers: [
                              sshTransfer(
