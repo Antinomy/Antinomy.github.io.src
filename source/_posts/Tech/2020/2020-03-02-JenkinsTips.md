@@ -1,10 +1,10 @@
 ---
 layout: mobile
-title:  jenkins tips
+title:  Jenkins Tips , CI with UI
 category: Tech
 ---
 
-Jenkins插件小贴士
+Jenkins插件小贴士 (一) CI with UI
 =====================
 
 ![img](/img/2020/Jenkins-1.png)
