@@ -75,7 +75,7 @@ hello, world
 Process exiting with code: 0
 ```
 # Other tips
-默认的代价检查golint十分啰嗦，个人推荐切换成GolangCI-Lint
+默认的代码检查golint十分啰嗦，个人推荐切换成GolangCI-Lint
 ![img](/img/2020/go-1-2.jpg)
 
 # 待续
