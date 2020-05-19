@@ -1,6 +1,6 @@
 ---
 layout: mobile
-title:  First Learn on Go Language 1
+title:  First Learn on Go Language 1  init
 category: Tech
 ---
 
@@ -78,8 +78,9 @@ Process exiting with code: 0
 默认的代码检查golint十分啰嗦，个人推荐切换成GolangCI-Lint
 ![img](/img/2020/go-1-2.jpg)
 
-# 待续
+# To be continue
+
 千里之行始于足下，折腾完开发环境之后，终于可以敲代码了，然后我又遇到了头疼的问题。。。。
 
-（to be continue）
+
 
