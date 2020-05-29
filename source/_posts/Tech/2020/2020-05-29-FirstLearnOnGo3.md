@@ -167,7 +167,7 @@ FAIL
 
 ```
 
-很明细 ban 包的代码无法识别的 task 包里的对象,导致无法运行. 
+很明显ban包的代码无法识别的task包里的对象,导致无法运行. 
 
 后来发现,编辑器会自动去掉 import 里的 "kanban/task",经过一番折腾,修改  "kanban/task" 为 kt "kanban/task",
 task 包才被成功识别. 看来 go 的包引用并没有我想象中那么智能.
