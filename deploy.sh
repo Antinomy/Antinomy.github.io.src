@@ -2,3 +2,5 @@
 
 hexo clean
 hexo generate --deploy
+
+./autoGit.sh
