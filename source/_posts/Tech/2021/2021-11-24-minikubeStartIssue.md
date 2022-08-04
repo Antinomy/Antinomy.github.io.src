@@ -49,5 +49,5 @@ kubeconfig: Configured
 ``` 
 
 # Ref
-＊ https://github.com/kubernetes/minikube/issues/12832
+*  https://github.com/kubernetes/minikube/issues/12832
 * https://minikube.sigs.k8s.io/docs/start/
